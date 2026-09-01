@@ -50,7 +50,11 @@ jobs:
                     "package_name": "com.aistudio.fastrecorder.xydq"
                   }
                 },
-                "api_key": [],
+                "api_key": [
+                  {
+                    "current_key": "AIzaSyPlaceholderKeyForCI123456789"
+                  }
+                ],
                 "services": {}
               }
             ],
