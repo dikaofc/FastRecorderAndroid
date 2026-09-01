@@ -30,9 +30,7 @@ import com.example.recorder.SettingsManager
 import com.example.recorder.TempFileCleaner
 import com.example.service.RecordingForegroundService
 import com.example.service.RecordingState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -41,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var settingsManager: SettingsManager
     private var pulseAnimator: ObjectAnimator? = null
-    private val scope = CoroutineScope(Dispatchers.Main + Job())
 
     private val screenCaptureLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -89,8 +86,10 @@ class MainActivity : AppCompatActivity() {
         settingsManager = SettingsManager(this)
 
         // Background auto purge of temp files older than 24h
-        CoroutineScope(Dispatchers.IO).launch {
-            TempFileCleaner.purgeOldTempFiles(this@MainActivity)
+        lifecycleScope.launch {
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                TempFileCleaner.purgeOldTempFiles(this@MainActivity)
+            }
         }
 
         setupUI()
@@ -199,7 +198,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeState() {
-        scope.launch {
+        lifecycleScope.launch {
             RecordingState.isRecording.collectLatest { isRecording ->
                 if (isRecording) {
                     binding.tvStatus.text = "RECORDING"
@@ -213,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        scope.launch {
+        lifecycleScope.launch {
             RecordingState.durationSeconds.collectLatest { duration ->
                 val m = duration / 60
                 val s = duration % 60

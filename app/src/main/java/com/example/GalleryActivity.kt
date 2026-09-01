@@ -4,6 +4,7 @@ package com.example
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -39,7 +40,7 @@ import com.example.recorder.SettingsManager
 import com.example.recorder.StorageThreshold
 import com.example.recorder.StorageThresholdNotifier
 import com.example.recorder.StorageUtils
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -375,58 +376,59 @@ class GalleryActivity : AppCompatActivity() {
     }
 
     private fun loadVideos() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val list = mutableListOf<VideoItem>()
-            val uriStr = settingsManager.storageUriString
-            
-            if (uriStr != null) {
-                try {
-                    val treeUri = Uri.parse(uriStr)
-                    val dir = DocumentFile.fromTreeUri(this@GalleryActivity, treeUri)
-                    dir?.listFiles()?.forEach { file ->
-                        if (file.type?.startsWith("video/") == true || file.name?.endsWith(".mp4") == true) {
-                            list.add(VideoItem(file.name ?: "Unknown", file.length(), file.uri))
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            } else {
-                val projection = arrayOf(MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME, MediaStore.Video.Media.SIZE)
-                val sortOrder = "${MediaStore.Video.Media.DATE_ADDED} DESC"
+        lifecycleScope.launch {
+            val list = withContext(Dispatchers.IO) {
+                val result = mutableListOf<VideoItem>()
+                val uriStr = settingsManager.storageUriString
                 
-                contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null, sortOrder)?.use { cursor ->
-                    val idCol = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
-                    val nameCol = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
-                    val sizeCol = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
-                    
-                    while (cursor.moveToNext()) {
-                        val id = cursor.getLong(idCol)
-                        val name = cursor.getString(nameCol)
-                        val size = cursor.getLong(sizeCol)
-                        val uri = android.content.ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id)
-                        if (name.startsWith("REC_") || name.contains("video") || name.endsWith(".mp4")) {
-                            list.add(VideoItem(name, size, uri))
+                if (uriStr != null) {
+                    try {
+                        val treeUri = Uri.parse(uriStr)
+                        val dir = DocumentFile.fromTreeUri(this@GalleryActivity, treeUri)
+                        dir?.listFiles()?.forEach { file ->
+                            if (file.type?.startsWith("video/") == true || file.name?.endsWith(".mp4") == true) {
+                                result.add(VideoItem(file.name ?: "Unknown", file.length(), file.uri))
+                            }
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                }
-            }
-
-            withContext(Dispatchers.Main) {
-                videos.clear()
-                videos.addAll(list.sortedByDescending { it.name })
-                adapter.notifyDataSetChanged()
-                
-                if (videos.isEmpty()) {
-                    binding.layoutEmpty.visibility = View.VISIBLE
-                    binding.rvGallery.visibility = View.GONE
                 } else {
-                    binding.layoutEmpty.visibility = View.GONE
-                    binding.rvGallery.visibility = View.VISIBLE
+                    val projection = arrayOf(MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME, MediaStore.Video.Media.SIZE)
+                    val sortOrder = "${MediaStore.Video.Media.DATE_ADDED} DESC"
+                    
+                    contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null, sortOrder)?.use { cursor ->
+                        val idCol = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
+                        val nameCol = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
+                        val sizeCol = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
+                        
+                        while (cursor.moveToNext()) {
+                            val id = cursor.getLong(idCol)
+                            val name = cursor.getString(nameCol)
+                            val size = cursor.getLong(sizeCol)
+                            val uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id)
+                            if (name.startsWith("REC_") || name.contains("video") || name.endsWith(".mp4")) {
+                                result.add(VideoItem(name, size, uri))
+                            }
+                        }
+                    }
                 }
-
-                checkStorageThresholdBanner()
+                result
             }
+
+            videos.clear()
+            videos.addAll(list.sortedByDescending { it.name })
+            adapter.notifyDataSetChanged()
+            
+            if (videos.isEmpty()) {
+                binding.layoutEmpty.visibility = View.VISIBLE
+                binding.rvGallery.visibility = View.GONE
+            } else {
+                binding.layoutEmpty.visibility = View.GONE
+                binding.rvGallery.visibility = View.VISIBLE
+            }
+
+            checkStorageThresholdBanner()
         }
     }
 
@@ -651,19 +653,17 @@ class GalleryActivity : AppCompatActivity() {
         tvInfoSize.text = StorageUtils.formatBytes(item.size)
 
         // Extract metadata in background
-        CoroutineScope(Dispatchers.IO).launch {
-            val info = extractVideoInfo(item)
-            withContext(Dispatchers.Main) {
-                if (dialog.isShowing) {
-                    tvInfoFileName.text = info.name
-                    tvInfoSize.text = info.sizeFormatted
-                    tvInfoDuration.text = info.durationFormatted
-                    tvInfoResolution.text = info.resolution
-                    tvInfoBitrate.text = info.bitrateFormatted
-                    tvInfoCodec.text = info.mimeType
-                    tvInfoDate.text = info.dateModified
-                    tvInfoPath.text = info.path
-                }
+        lifecycleScope.launch {
+            val info = withContext(Dispatchers.IO) { extractVideoInfo(item) }
+            if (dialog.isShowing) {
+                tvInfoFileName.text = info.name
+                tvInfoSize.text = info.sizeFormatted
+                tvInfoDuration.text = info.durationFormatted
+                tvInfoResolution.text = info.resolution
+                tvInfoBitrate.text = info.bitrateFormatted
+                tvInfoCodec.text = info.mimeType
+                tvInfoDate.text = info.dateModified
+                tvInfoPath.text = info.path
             }
         }
 
@@ -824,44 +824,45 @@ class GalleryActivity : AppCompatActivity() {
         val cleanName = if (newRawName.endsWith(".mp4", ignoreCase = true)) newRawName else "$newRawName.mp4"
         if (cleanName == item.name) return
 
-        CoroutineScope(Dispatchers.IO).launch {
-            var renamed = false
-            val uriStr = settingsManager.storageUriString
+        lifecycleScope.launch {
+            val renamed = withContext(Dispatchers.IO) {
+                var renamed = false
+                val uriStr = settingsManager.storageUriString
 
-            if (uriStr != null) {
-                try {
-                    val treeUri = Uri.parse(uriStr)
-                    val dir = DocumentFile.fromTreeUri(this@GalleryActivity, treeUri)
-                    val file = dir?.findFile(item.name)
-                    if (file != null && file.renameTo(cleanName)) {
-                        renamed = true
+                if (uriStr != null) {
+                    try {
+                        val treeUri = Uri.parse(uriStr)
+                        val dir = DocumentFile.fromTreeUri(this@GalleryActivity, treeUri)
+                        val file = dir?.findFile(item.name)
+                        if (file != null && file.renameTo(cleanName)) {
+                            renamed = true
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
+
+                if (!renamed) {
+                    try {
+                        val values = android.content.ContentValues().apply {
+                            put(MediaStore.Video.Media.DISPLAY_NAME, cleanName)
+                        }
+                        val updatedRows = contentResolver.update(item.uri, values, null, null)
+                        if (updatedRows > 0) {
+                            renamed = true
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                renamed
             }
 
-            if (!renamed) {
-                try {
-                    val values = android.content.ContentValues().apply {
-                        put(MediaStore.Video.Media.DISPLAY_NAME, cleanName)
-                    }
-                    val updatedRows = contentResolver.update(item.uri, values, null, null)
-                    if (updatedRows > 0) {
-                        renamed = true
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-            withContext(Dispatchers.Main) {
-                if (renamed) {
-                    Toast.makeText(this@GalleryActivity, "Renamed to $cleanName", Toast.LENGTH_SHORT).show()
-                    loadVideos()
-                } else {
-                    Toast.makeText(this@GalleryActivity, "Failed to rename file", Toast.LENGTH_SHORT).show()
-                }
+            if (renamed) {
+                Toast.makeText(this@GalleryActivity, "Renamed to $cleanName", Toast.LENGTH_SHORT).show()
+                loadVideos()
+            } else {
+                Toast.makeText(this@GalleryActivity, "Failed to rename file", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -918,44 +919,45 @@ class GalleryActivity : AppCompatActivity() {
     }
 
     private fun performDelete(itemsToDelete: List<VideoItem>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            var deletedCount = 0
-            val uriStr = settingsManager.storageUriString
+        lifecycleScope.launch {
+            val deletedCount = withContext(Dispatchers.IO) {
+                var count = 0
+                val uriStr = settingsManager.storageUriString
 
-            for (item in itemsToDelete) {
-                var deleted = false
-                if (uriStr != null) {
-                    try {
-                        val treeUri = Uri.parse(uriStr)
-                        val dir = DocumentFile.fromTreeUri(this@GalleryActivity, treeUri)
-                        val file = dir?.findFile(item.name)
-                        if (file != null && file.delete()) {
-                            deleted = true
+                for (item in itemsToDelete) {
+                    var deleted = false
+                    if (uriStr != null) {
+                        try {
+                            val treeUri = Uri.parse(uriStr)
+                            val dir = DocumentFile.fromTreeUri(this@GalleryActivity, treeUri)
+                            val file = dir?.findFile(item.name)
+                            if (file != null && file.delete()) {
+                                deleted = true
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
                     }
-                }
 
-                if (!deleted) {
-                    try {
-                        val rows = contentResolver.delete(item.uri, null, null)
-                        if (rows > 0) deleted = true
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    if (!deleted) {
+                        try {
+                            val rows = contentResolver.delete(item.uri, null, null)
+                            if (rows > 0) deleted = true
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
-                }
 
-                if (deleted) deletedCount++
+                    if (deleted) count++
+                }
+                count
             }
 
-            withContext(Dispatchers.Main) {
-                Toast.makeText(this@GalleryActivity, "Deleted $deletedCount video(s)", Toast.LENGTH_SHORT).show()
-                if (isSelectionMode) {
-                    exitSelectionMode()
-                }
-                loadVideos()
+            Toast.makeText(this@GalleryActivity, "Deleted $deletedCount video(s)", Toast.LENGTH_SHORT).show()
+            if (isSelectionMode) {
+                exitSelectionMode()
             }
+            loadVideos()
         }
     }
 
@@ -1006,7 +1008,7 @@ class GalleryActivity : AppCompatActivity() {
 
         progressDialog.show()
 
-        uploadJob = CoroutineScope(Dispatchers.IO).launch {
+        uploadJob = lifecycleScope.launch {
             for ((index, item) in itemsToUpload.withIndex()) {
                 val currentFileIndex = index + 1
                 val totalMb = item.size / (1024.0 * 1024.0)

@@ -39,6 +39,8 @@ import com.example.recorder.TempFileCleaner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -50,7 +52,7 @@ class RecordingForegroundService : Service() {
     private var outputFileDescriptor: ParcelFileDescriptor? = null
     private var outputUri: Uri? = null
     
-    private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
+    private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var timerJob: Job? = null
     private var fileName: String = ""
 
@@ -64,7 +66,12 @@ class RecordingForegroundService : Service() {
         when (intent?.action) {
             ACTION_START -> {
                 val resultCode = intent.getIntExtra(EXTRA_RESULT_CODE, 0)
-                val data = intent.getParcelableExtra<Intent>(EXTRA_RESULT_DATA)
+                val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(EXTRA_RESULT_DATA, Intent::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra(EXTRA_RESULT_DATA)
+                }
                 if (data != null && resultCode != 0) {
                     startRecording(resultCode, data)
                 }
@@ -136,6 +143,7 @@ class RecordingForegroundService : Service() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && (audioMode == AudioMode.MIC || audioMode == AudioMode.BOTH || audioMode == AudioMode.INTERNAL)) {
                     type = type or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
                 }
+                // Android 14 (API 34) enforces strict foreground service type declaration
                 startForeground(NOTIFICATION_ID, notification, type)
             } else {
                 startForeground(NOTIFICATION_ID, notification)
@@ -291,8 +299,18 @@ class RecordingForegroundService : Service() {
     }
 
     private fun finishService() {
-        stopForeground(STOP_FOREGROUND_REMOVE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            @Suppress("DEPRECATION")
+            stopForeground(true)
+        }
         stopSelf()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        serviceScope.cancel()
     }
     
     private fun startTimer() {

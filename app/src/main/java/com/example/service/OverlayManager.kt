@@ -13,14 +13,19 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class OverlayManager(private val context: Context) {
     private var windowManager: WindowManager? = null
     private var overlayView: View? = null
-    private var overlayJob: Job? = null
     private var hideJob: Job? = null
-    private val scope = CoroutineScope(Dispatchers.Main + Job())
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     @SuppressLint("ClickableViewAccessibility")
     fun showOverlay() {
@@ -112,10 +117,14 @@ class OverlayManager(private val context: Context) {
 
     fun hideOverlay() {
         hideJob?.cancel()
-        overlayJob?.cancel()
         if (overlayView != null) {
-            windowManager?.removeView(overlayView)
+            try {
+                windowManager?.removeView(overlayView)
+            } catch (e: Exception) {
+                // View may already be removed
+            }
             overlayView = null
         }
+        scope.cancel()
     }
 }
