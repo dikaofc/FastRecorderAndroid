@@ -222,7 +222,8 @@ class GalleryActivity : AppCompatActivity() {
 
         binding.rvGallery.layoutManager = GridLayoutManager(this, 2)
         binding.rvGallery.adapter = adapter
-        binding.rvGallery.setHasFixedSize(true)
+        // Disabled: lint error when using wrap_content in scrolling direction
+        // binding.rvGallery.setHasFixedSize(true)
         binding.rvGallery.setItemViewCacheSize(20)
     }
 
