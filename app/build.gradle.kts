@@ -68,6 +68,15 @@ android {
     compose = true
     buildConfig = true
   }
+
+  // Security & credit BuildConfig fields
+  defaultConfig {
+    buildConfigField("String", "CREDIT_DEVELOPER", '"@dikaacode"')
+    buildConfigField("String", "CREDIT_TEAM", '"dikaacode"')
+    buildConfigField("String", "CREDIT_URL", '"https://t.me/dikaacode"')
+    buildConfigField("String", "SECURITY_PACKAGE", '"com.dika.fastrecorder"')
+    buildConfigField("int", "SECURITY_VERSION", '2')
+  }
   testOptions { unitTests { isIncludeAndroidResources = true } }
   dependenciesInfo {
     includeInApk = false

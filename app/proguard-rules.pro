@@ -17,7 +17,30 @@
 }
 
 # Keep data classes
--keep class com.example.recorder.** { *; }
--keep class com.example.service.** { *; }
--keep class com.example.ui.components.** { *; }
--keep class com.example.ui.theme.** { *; }
+-keep class com.dikacode.recorder.** { *; }
+-keep class com.dikacode.service.** { *; }
+-keep class com.dikacode.ui.components.** { *; }
+-keep class com.dikacode.ui.theme.** { *; }
+
+# ===== SECURITY: Protect critical security classes =====
+# DO NOT REMOVE OR MODIFY THESE RULES
+-keep class com.dikacode.security.** { *; }
+-keep class com.dikacode.MainActivity { *; }
+-keepclassmembers class com.dikacode.security.** {
+    <fields>;
+    <methods>;
+}
+-keepclassmembers class com.dikacode.security.SecurityManager {
+    *;
+}
+-keepclassmembers class com.dikacode.security.CreditManager {
+    *;
+}
+# Protect BuildConfig credit fields
+-keepclassmembers class com.dikacode.BuildConfig {
+    public static final String CREDIT_*;
+    public static final String SECURITY_*;
+}
+# Obfuscate security package to make reverse engineering harder
+-repackageclasses com.dikacode.security
+-allowaccessmodification

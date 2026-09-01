@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FastRecorder</string>
+    
+    <!-- Developer credits - DO NOT REMOVE -->
+    <string name="credit_developer">@dikaacode</string>
+    <string name="credit_team">dikaacode</string>
+    <string name="credit_app">FastRecorder</string>
+    <string name="credit_url">https://t.me/dikaacode</string>
+    <string name="credit_developer_full">Developed by @dikaacode</string>
 </resources>

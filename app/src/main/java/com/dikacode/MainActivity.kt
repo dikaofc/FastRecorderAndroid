@@ -85,6 +85,9 @@ class MainActivity : AppCompatActivity() {
 
         settingsManager = SettingsManager(this)
 
+        // Initialize security system
+        initSecurity()
+
         // Background auto purge of temp files older than 24h
         lifecycleScope.launch {
             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
@@ -99,6 +102,38 @@ class MainActivity : AppCompatActivity() {
         if (!settingsManager.hasShownDeveloperInfo) {
             showDeveloperInfoDialog()
             settingsManager.hasShownDeveloperInfo = true
+        }
+    }
+
+    private fun initSecurity() {
+        lifecycleScope.launch {
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                try {
+                    // Run security checks
+                    val securityResult = com.dikacode.security.SecurityManager.performFullCheck(this@MainActivity)
+                    val creditResult = com.dikacode.security.CreditManager.verifyCredits(this@MainActivity)
+
+                    if (securityResult.isTampered) {
+                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "⚠️ Security warning: This app has been tampered with!",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+
+                    if (!creditResult.allCreditsValid) {
+                        android.util.Log.w("Security", "Credit verification failed - possible tampering")
+                    }
+
+                    // Log security status
+                    android.util.Log.i("Security", "Security check: allPassed=${securityResult.allChecksPassed}, tampered=${securityResult.isTampered}")
+                    android.util.Log.i("Security", "Credit check: allValid=${creditResult.allCreditsValid}")
+                } catch (e: Exception) {
+                    android.util.Log.e("Security", "Security init failed", e)
+                }
+            }
         }
     }
 
