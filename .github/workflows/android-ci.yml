@@ -26,6 +26,13 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Generate Gradle wrapper if missing
+        run: |
+          if [ ! -f "gradlew" ] || [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+            echo "Gradle wrapper missing, generating..."
+            gradle wrapper --gradle-version 9.3.1
+          fi
+
       - name: Generate google-services.json (stub)
         run: |
           cat > app/google-services.json << 'EOF'
