@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialogInfoRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_neo_card"
+    android:padding="20dp"
+    android:layout_margin="16dp">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:id="@+id/ivInfoIcon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_info"
+            app:tint="@color/neo_black"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="Info"/>
+
+        <TextView
+            android:id="@+id/tvInfoTitle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="TECHNICAL INFO"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvInfoFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="REC_20260901_120000.mp4"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/neo_black"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        android:layout_marginBottom="14dp"/>
+
+    <!-- Technical Details Grid / Rows -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="340dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:id="@+id/infoContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_neo_spinner"
+            android:padding="12dp">
+
+            <!-- Duration -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:id="@+id/lblInfoDuration"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Duration"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"/>
+                <TextView
+                    android:id="@+id/tvInfoDuration"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="02:45 (165s)"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- File Size -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:id="@+id/lblInfoSize"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="File Size"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"/>
+                <TextView
+                    android:id="@+id/tvInfoSize"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="45.2 MB (47,402,112 bytes)"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Resolution -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:id="@+id/lblInfoResolution"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Resolution"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"/>
+                <TextView
+                    android:id="@+id/tvInfoResolution"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="1080 x 2400 (FHD+)"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Bitrate -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:id="@+id/lblInfoBitrate"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Bitrate"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"/>
+                <TextView
+                    android:id="@+id/tvInfoBitrate"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="12.0 Mbps"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Frame Rate (FPS) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:id="@+id/lblInfoFps"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Frame Rate"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"/>
+                <TextView
+                    android:id="@+id/tvInfoFps"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="60 FPS"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Video Codec -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:id="@+id/lblInfoCodec"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Video Codec"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"/>
+                <TextView
+                    android:id="@+id/tvInfoCodec"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="H.264 / AVC (video/mp4)"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Audio Info -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:id="@+id/lblInfoAudio"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Audio"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"/>
+                <TextView
+                    android:id="@+id/tvInfoAudio"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="AAC Stereo"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Date Recorded -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:id="@+id/lblInfoDate"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Date Created"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"/>
+                <TextView
+                    android:id="@+id/tvInfoDate"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="2026-09-01 12:00:00"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Location Path -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/lblInfoPath"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Storage Path / URI"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"
+                    android:layout_marginBottom="4dp"/>
+                <TextView
+                    android:id="@+id/tvInfoPath"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="/storage/emulated/0/Movies/FastRecorder/REC_20260901.mp4"
+                    android:textSize="12sp"
+                    android:textColor="#333333"
+                    android:background="#15000000"
+                    android:padding="8dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnInfoPlay"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="44dp"
+            android:text="PLAY VIDEO"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_white"
+            android:background="@drawable/bg_neo_toggle_on"
+            android:layout_marginEnd="6dp"/>
+
+        <TextView
+            android:id="@+id/btnInfoClose"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="CLOSE"
+            android:gravity="center"
+            android:paddingHorizontal="20dp"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:background="@drawable/bg_neo_button"/>
+    </LinearLayout>
+
+</LinearLayout>

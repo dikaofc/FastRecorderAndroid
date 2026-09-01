@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardVideoRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_neo_card"
+    android:layout_margin="8dp"
+    android:padding="8dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="#22000000"
+        android:layout_marginBottom="8dp">
+        <ImageView
+            android:id="@+id/ivThumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Thumbnail"/>
+        <ImageView
+            android:id="@+id/ivPlayCenter"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:src="@drawable/ic_play_arrow"
+            app:tint="@color/neo_white"
+            android:contentDescription="Play"/>
+
+        <!-- Selection Checkbox Badge -->
+        <FrameLayout
+            android:id="@+id/layoutSelectionCheck"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="6dp"
+            android:background="@drawable/bg_neo_checkbox_unchecked"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivCheckMark"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_check_neo"
+                app:tint="@color/neo_black"
+                android:visibility="gone"
+                android:contentDescription="Selected"/>
+        </FrameLayout>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Video_12345.mp4"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/neo_black"
+        android:singleLine="true"
+        android:ellipsize="middle"/>
+
+    <TextView
+        android:id="@+id/tvSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="12.4 MB"
+        android:textSize="12sp"
+        android:textColor="#444444"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/layoutActions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4">
+        
+        <ImageView
+            android:id="@+id/btnPlay"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_neo_button"
+            android:src="@drawable/ic_play_arrow"
+            app:tint="@color/neo_black"
+            android:layout_marginEnd="3dp"
+            android:contentDescription="Play Video"/>
+
+        <ImageView
+            android:id="@+id/btnInfo"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_neo_button"
+            android:src="@drawable/ic_info"
+            app:tint="@color/neo_black"
+            android:layout_marginEnd="3dp"
+            android:contentDescription="Video Info"/>
+
+        <ImageView
+            android:id="@+id/btnUpload"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_neo_button"
+            android:src="@drawable/ic_cloud_upload"
+            app:tint="@color/neo_black"
+            android:layout_marginEnd="3dp"
+            android:contentDescription="Upload to Catbox"/>
+
+        <ImageView
+            android:id="@+id/btnDelete"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_neo_button"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/neo_red"
+            android:contentDescription="Delete Video"/>
+
+    </LinearLayout>
+
+</LinearLayout>

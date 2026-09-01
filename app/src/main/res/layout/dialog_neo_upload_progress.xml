@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_neo_card"
+    android:padding="20dp"
+    android:layout_margin="24dp">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/tvUploadTitle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="UPLOADING TO CLOUD"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"/>
+
+        <TextView
+            android:id="@+id/tvProgressPercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvUploadFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="REC_video.mp4"
+        android:textSize="13sp"
+        android:textColor="#555555"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Custom Neo-Brutalist Progress Bar Container -->
+    <FrameLayout
+        android:id="@+id/progressContainer"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:background="@drawable/bg_neo_progress_container"
+        android:padding="2dp"
+        android:layout_marginBottom="8dp">
+
+        <View
+            android:id="@+id/progressFill"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_neo_progress_fill"/>
+    </FrameLayout>
+
+    <!-- Progress bytes counter -->
+    <TextView
+        android:id="@+id/tvProgressBytes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0.0 MB / 0.0 MB"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/neo_black"
+        android:gravity="end"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/btnCancelUpload"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="CANCEL"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/neo_white"
+        android:background="@drawable/bg_neo_toggle_on"/>
+
+</LinearLayout>

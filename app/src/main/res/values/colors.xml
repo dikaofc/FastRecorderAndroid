@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="neo_yellow">#FFD700</color>
+    <color name="neo_black">#0A0A0A</color>
+    <color name="neo_white">#FFFFFF</color>
+    <color name="neo_red">#FF3B30</color>
+    <color name="neo_green">#00E676</color>
+    
+    <!-- Dark Mode Neo-Brutalist Colors -->
+    <color name="neo_dark_bg">#121212</color>
+    <color name="neo_dark_surface">#1E1E1E</color>
+    <color name="neo_dark_card">#252525</color>
+    <color name="neo_dark_stroke">#E0E0E0</color>
+    <color name="neo_dark_text">#FFFFFF</color>
+    <color name="neo_dark_subtext">#AAAAAA</color>
+</resources>

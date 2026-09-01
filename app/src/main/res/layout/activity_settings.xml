@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settingsRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/neo_yellow"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:background="@drawable/bg_neo_spinner"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/neo_black"
+            android:contentDescription="Back"/>
+
+        <TextView
+            android:id="@+id/tvSettingsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SETTINGS"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+        
+        <LinearLayout
+            android:id="@+id/settingsCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_neo_card"
+            android:padding="16dp">
+
+            <!-- Resolution -->
+            <TextView
+                android:id="@+id/lblResolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Resolution"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"/>
+            <FrameLayout
+                android:id="@+id/frameRes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_neo_spinner"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="14dp">
+                <Spinner
+                    android:id="@+id/spinnerRes"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@null"
+                    android:spinnerMode="dropdown"/>
+                <ImageView
+                    android:id="@+id/ivArrowRes"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:src="@android:drawable/arrow_down_float"
+                    app:tint="@color/neo_black"
+                    android:contentDescription="Dropdown"/>
+            </FrameLayout>
+
+            <!-- Framerate -->
+            <TextView
+                android:id="@+id/lblFps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Framerate (FPS)"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"/>
+            <FrameLayout
+                android:id="@+id/frameFps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_neo_spinner"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="14dp">
+                <Spinner
+                    android:id="@+id/spinnerFps"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@null"
+                    android:spinnerMode="dropdown"/>
+                <ImageView
+                    android:id="@+id/ivArrowFps"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:src="@android:drawable/arrow_down_float"
+                    app:tint="@color/neo_black"
+                    android:contentDescription="Dropdown"/>
+            </FrameLayout>
+
+            <!-- Audio Mode -->
+            <TextView
+                android:id="@+id/lblAudio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Audio Source"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"/>
+            <FrameLayout
+                android:id="@+id/frameAudio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_neo_spinner"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="14dp">
+                <Spinner
+                    android:id="@+id/spinnerAudio"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@null"
+                    android:spinnerMode="dropdown"/>
+                <ImageView
+                    android:id="@+id/ivArrowAudio"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:src="@android:drawable/arrow_down_float"
+                    app:tint="@color/neo_black"
+                    android:contentDescription="Dropdown"/>
+            </FrameLayout>
+
+            <!-- Internal Audio Quick Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="14dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/lblInternalAudio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Internal Audio Capture"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_black"/>
+                    <TextView
+                        android:id="@+id/subInternalAudio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Capture in-game and system sound"
+                        android:textSize="11sp"
+                        android:textColor="#666666"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/toggleInternalAudio"
+                    android:layout_width="64dp"
+                    android:layout_height="36dp"
+                    android:text="OFF"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_neo_toggle_off"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Floating Overlay Switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="14dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/lblOverlay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Floating Overlay"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_black"/>
+                    <TextView
+                        android:id="@+id/subOverlay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Quick controls floating widget"
+                        android:textSize="11sp"
+                        android:textColor="#666666"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/toggleOverlay"
+                    android:layout_width="64dp"
+                    android:layout_height="36dp"
+                    android:text="ON"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_neo_toggle_on"
+                    android:textColor="@color/neo_white"/>
+            </LinearLayout>
+
+            <!-- High Performance Switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="14dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/lblHighPerf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="High Performance"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_black"/>
+                    <TextView
+                        android:id="@+id/subHighPerf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Prioritize maximum frame stability"
+                        android:textSize="11sp"
+                        android:textColor="#666666"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/toggleHighPerf"
+                    android:layout_width="64dp"
+                    android:layout_height="36dp"
+                    android:text="OFF"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_neo_toggle_off"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Battery Saver Switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="14dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/lblBatterySaver"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Battery Saver"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_black"/>
+                    <TextView
+                        android:id="@+id/subBatterySaver"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reduces bitrate and hides overlay"
+                        android:textSize="11sp"
+                        android:textColor="#666666"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/toggleBatterySaver"
+                    android:layout_width="64dp"
+                    android:layout_height="36dp"
+                    android:text="OFF"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_neo_toggle_off"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Auto Upload Cloud Switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="14dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/lblAutoUpload"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Auto Upload Cloud"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_black"/>
+                    <TextView
+                        android:id="@+id/subAutoUpload"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upload to Catbox and copy link"
+                        android:textSize="11sp"
+                        android:textColor="#666666"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/toggleAutoUpload"
+                    android:layout_width="64dp"
+                    android:layout_height="36dp"
+                    android:text="OFF"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_neo_toggle_off"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Dark Mode Switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="18dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/lblDarkMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dark Mode"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_black"/>
+                    <TextView
+                        android:id="@+id/subDarkMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="High-contrast dark grey theme"
+                        android:textSize="11sp"
+                        android:textColor="#666666"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/toggleDarkMode"
+                    android:layout_width="64dp"
+                    android:layout_height="36dp"
+                    android:text="OFF"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_neo_toggle_off"
+                    android:textColor="@color/neo_black"/>
+            </LinearLayout>
+
+            <!-- Storage Usage & Directory Management Section -->
+            <TextView
+                android:id="@+id/lblStorageSection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Storage &amp; Recording Directory"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"/>
+
+            <!-- Storage Usage Stats Card -->
+            <LinearLayout
+                android:id="@+id/storageStatsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_neo_spinner"
+                android:padding="12dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="6dp">
+
+                    <TextView
+                        android:id="@+id/tvStorageTypeLabel"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="INTERNAL STORAGE"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="#555555"/>
+
+                    <TextView
+                        android:id="@+id/tvStorageUsageSummary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.0 GB Free / 0.0 GB Total"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_black"/>
+                </LinearLayout>
+
+                <!-- Storage Progress Bar -->
+                <FrameLayout
+                    android:id="@+id/storageProgressContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:background="@drawable/bg_neo_progress_container"
+                    android:padding="2dp"
+                    android:layout_marginBottom="6dp">
+
+                    <View
+                        android:id="@+id/storageProgressFill"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_neo_progress_fill"/>
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvStoragePath"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="/sdcard/Movies/FastRecorder/"
+                    android:textSize="12sp"
+                    android:textColor="@color/neo_black"
+                    android:textStyle="bold"
+                    android:singleLine="true"
+                    android:ellipsize="middle"/>
+            </LinearLayout>
+
+            <!-- Change Directory Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="18dp">
+
+                <TextView
+                    android:id="@+id/btnSelectDirectory"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="44dp"
+                    android:text="SELECT FOLDER"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_white"
+                    android:background="@drawable/bg_neo_toggle_on"
+                    android:layout_marginEnd="6dp"/>
+
+                <TextView
+                    android:id="@+id/btnResetDirectory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="RESET"
+                    android:paddingHorizontal="14dp"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"
+                    android:background="@drawable/bg_neo_spinner"/>
+            </LinearLayout>
+
+            <!-- Storage Limit Alert Threshold -->
+            <TextView
+                android:id="@+id/lblStorageThreshold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Storage Alert Limit"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"/>
+            <TextView
+                android:id="@+id/subStorageThreshold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alert notification when recordings exceed limit"
+                android:textSize="11sp"
+                android:textColor="#555555"
+                android:layout_marginTop="1dp"/>
+            <FrameLayout
+                android:id="@+id/frameStorageThreshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_neo_spinner"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="16dp">
+                <Spinner
+                    android:id="@+id/spinnerStorageThreshold"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@null"
+                    android:spinnerMode="dropdown"/>
+                <ImageView
+                    android:id="@+id/ivArrowStorageThreshold"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:src="@android:drawable/arrow_down_float"
+                    app:tint="@color/neo_black"
+                    android:contentDescription="Dropdown"/>
+            </FrameLayout>
+
+            <!-- Clear Cache Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="6dp">
+                    <TextView
+                        android:id="@+id/lblCache"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Cache &amp; Temporary Files"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_black"/>
+                    <TextView
+                        android:id="@+id/tvCacheSize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.0 MB"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#555555"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnClearCache"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:text="CLEAR CACHE &amp; TEMP FILES"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"
+                    android:background="@drawable/bg_neo_spinner"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

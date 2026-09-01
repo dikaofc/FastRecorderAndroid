@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/galleryRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/neo_yellow"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Storage Warning Banner (Visible if total storage exceeds threshold) -->
+    <LinearLayout
+        android:id="@+id/bannerStorageWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_neo_card"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivStorageWarnIcon"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_warning"
+            app:tint="@color/neo_red"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="Storage Warning"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvStorageWarnTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STORAGE LIMIT EXCEEDED"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_red"/>
+
+            <TextView
+                android:id="@+id/tvStorageWarnDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recordings: 1.2 GB / Limit: 1 GB"
+                android:textSize="11sp"
+                android:textColor="#555555"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btnManageStorage"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:paddingHorizontal="10dp"
+            android:gravity="center"
+            android:text="SETTINGS"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:background="@drawable/bg_neo_button"/>
+    </LinearLayout>
+
+    <!-- Normal Header Bar -->
+    <LinearLayout
+        android:id="@+id/layoutNormalHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:background="@drawable/bg_neo_button"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/neo_black"
+            android:contentDescription="Back"/>
+
+        <TextView
+            android:id="@+id/tvTitleGallery"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="GALLERY"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:layout_marginStart="14dp"/>
+
+        <!-- Prominent Upload / Multi-Select Button -->
+        <LinearLayout
+            android:id="@+id/btnUploadToCatbox"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg_neo_toggle_on"
+            android:paddingHorizontal="14dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_cloud_upload"
+                app:tint="@color/neo_white"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="Upload"/>
+
+            <TextView
+                android:id="@+id/tvUploadToCatboxText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SELECT / UPLOAD"
+                android:textColor="@color/neo_white"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Selection Mode Header Bar -->
+    <LinearLayout
+        android:id="@+id/layoutSelectionHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/btnCloseSelection"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:background="@drawable/bg_neo_button"
+            android:src="@drawable/ic_close"
+            app:tint="@color/neo_black"
+            android:contentDescription="Cancel Selection"/>
+
+        <TextView
+            android:id="@+id/tvSelectionCount"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="0 SELECTED"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:layout_marginStart="10dp"/>
+
+        <TextView
+            android:id="@+id/btnSelectAll"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:paddingHorizontal="12dp"
+            android:gravity="center"
+            android:text="SELECT ALL"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:background="@drawable/bg_neo_button"
+            android:layout_marginEnd="6dp"/>
+
+        <TextView
+            android:id="@+id/btnPickStorageVideos"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:paddingHorizontal="12dp"
+            android:gravity="center"
+            android:text="FROM FILES"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:background="@drawable/bg_neo_button"/>
+    </LinearLayout>
+
+    <!-- Main Content Area -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvGallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp"/>
+
+        <!-- Empty State Container -->
+        <LinearLayout
+            android:id="@+id/layoutEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvEmptyTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NO RECORDINGS FOUND"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvEmptyDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Record a screen video or select video files from your device to upload to Catbox cloud."
+                android:textSize="13sp"
+                android:textColor="#555555"
+                android:gravity="center"
+                android:layout_marginBottom="20dp"/>
+
+            <TextView
+                android:id="@+id/btnPickFromStorageEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="SELECT VIDEOS FROM DEVICE"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_white"
+                android:background="@drawable/bg_neo_toggle_on"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Bottom Action Bar (Visible in Selection Mode) -->
+    <LinearLayout
+        android:id="@+id/layoutBottomBatchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
+
+        <!-- Delete Selected Button -->
+        <LinearLayout
+            android:id="@+id/btnBatchDelete"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_neo_button_danger"
+            android:layout_marginEnd="6dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/neo_white"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="Delete"/>
+
+            <TextView
+                android:id="@+id/tvBatchDeleteText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DELETE (0)"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_white"/>
+        </LinearLayout>
+
+        <!-- Upload Selected Button -->
+        <LinearLayout
+            android:id="@+id/btnStartBatchUpload"
+            android:layout_width="0dp"
+            android:layout_weight="1.2"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_neo_toggle_on"
+            android:layout_marginEnd="6dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_cloud_upload"
+                app:tint="@color/neo_white"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="Upload"/>
+
+            <TextView
+                android:id="@+id/tvBatchUploadText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UPLOAD (0)"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_white"/>
+        </LinearLayout>
+
+        <!-- Cancel Batch Button -->
+        <TextView
+            android:id="@+id/btnCancelBatch"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:paddingHorizontal="14dp"
+            android:gravity="center"
+            android:text="CANCEL"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:background="@drawable/bg_neo_button"/>
+    </LinearLayout>
+
+</LinearLayout>

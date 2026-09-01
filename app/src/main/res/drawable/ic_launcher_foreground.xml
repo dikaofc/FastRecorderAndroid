@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Neo-Brutalist Icon Base Container -->
+    <path
+        android:fillColor="#0A0A0A"
+        android:pathData="M30,30 h48 v48 h-48 z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M26,26 h48 v48 h-48 z" />
+    <path
+        android:strokeColor="#0A0A0A"
+        android:strokeWidth="4"
+        android:fillColor="#FFD700"
+        android:pathData="M26,26 h48 v48 h-48 z" />
+
+    <!-- Video Camera and Record Dot -->
+    <!-- Camera Body -->
+    <path
+        android:strokeColor="#0A0A0A"
+        android:strokeWidth="3.5"
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,40 h24 v24 h-24 z" />
+
+    <!-- Camera Lens Cone -->
+    <path
+        android:strokeColor="#0A0A0A"
+        android:strokeWidth="3"
+        android:fillColor="#0A0A0A"
+        android:pathData="M60,45 L70,39 v26 L60,59 Z" />
+
+    <!-- Red Record Indicator Dot -->
+    <path
+        android:fillColor="#FF3B30"
+        android:pathData="M46,52 m-5,0 a5,5 0 1,1 10,0 a5,5 0 1,1 -10,0" />
+</vector>
