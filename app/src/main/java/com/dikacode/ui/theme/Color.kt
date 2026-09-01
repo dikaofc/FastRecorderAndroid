@@ -1,5 +1,5 @@
 // @dikaacode
-package com.example.ui.theme
+package com.dikacode.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

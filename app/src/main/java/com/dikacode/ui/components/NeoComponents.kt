@@ -1,5 +1,5 @@
 // @dikaacode
-package com.example.ui.components
+package com.dikacode.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable

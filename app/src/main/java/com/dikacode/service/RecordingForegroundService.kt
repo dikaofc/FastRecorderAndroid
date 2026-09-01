@@ -1,5 +1,5 @@
 // @dikaacode
-package com.example.service
+package com.dikacode.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -29,13 +29,13 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.documentfile.provider.DocumentFile
-import com.example.R
-import com.example.recorder.AudioMode
-import com.example.recorder.BitrateType
-import com.example.recorder.CatboxUploader
-import com.example.recorder.ScreenRecorder
-import com.example.recorder.SettingsManager
-import com.example.recorder.TempFileCleaner
+import com.dikacode.R
+import com.dikacode.recorder.AudioMode
+import com.dikacode.recorder.BitrateType
+import com.dikacode.recorder.CatboxUploader
+import com.dikacode.recorder.ScreenRecorder
+import com.dikacode.recorder.SettingsManager
+import com.dikacode.recorder.TempFileCleaner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -235,7 +235,7 @@ class RecordingForegroundService : Service() {
 
         // Check storage threshold in background
         serviceScope.launch(Dispatchers.IO) {
-            com.example.recorder.StorageThresholdNotifier.checkAndNotifyIfExceeded(this@RecordingForegroundService)
+            com.dikacode.recorder.StorageThresholdNotifier.checkAndNotifyIfExceeded(this@RecordingForegroundService)
         }
         
         val uri = outputUri

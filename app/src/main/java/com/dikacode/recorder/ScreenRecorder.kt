@@ -1,5 +1,5 @@
 // @dikaacode
-package com.example.recorder
+package com.dikacode.recorder
 
 import android.content.Context
 import android.hardware.display.DisplayManager
@@ -113,7 +113,7 @@ class ScreenRecorder(
 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start ScreenRecorder", e)
-            com.example.service.RecordingState.setError("Failed to start ScreenRecorder: ${e.message}")
+            com.dikacode.service.RecordingState.setError("Failed to start ScreenRecorder: ${e.message}")
             release()
             throw e
         }

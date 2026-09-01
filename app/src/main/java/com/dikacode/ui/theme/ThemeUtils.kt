@@ -1,10 +1,10 @@
 // @dikaacode
-package com.example.ui.theme
+package com.dikacode.ui.theme
 
 import android.app.Activity
 import android.graphics.Color
 import androidx.core.content.ContextCompat
-import com.example.R
+import com.dikacode.R
 
 /**
  * Shared theme utilities to eliminate duplicated applyThemeUI() across Activities.

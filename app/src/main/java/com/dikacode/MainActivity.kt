@@ -1,4 +1,4 @@
-package com.example
+package com.dikacode
 
 import android.Manifest
 import android.animation.ObjectAnimator
@@ -24,12 +24,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.databinding.ActivityMainBinding
-import com.example.recorder.AudioMode
-import com.example.recorder.SettingsManager
-import com.example.recorder.TempFileCleaner
-import com.example.service.RecordingForegroundService
-import com.example.service.RecordingState
+import com.dikacode.databinding.ActivityMainBinding
+import com.dikacode.recorder.AudioMode
+import com.dikacode.recorder.SettingsManager
+import com.dikacode.recorder.TempFileCleaner
+import com.dikacode.service.RecordingForegroundService
+import com.dikacode.service.RecordingState
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

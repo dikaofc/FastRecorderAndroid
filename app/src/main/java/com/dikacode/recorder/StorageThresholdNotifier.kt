@@ -1,5 +1,5 @@
 // @dikaacode
-package com.example.recorder
+package com.dikacode.recorder
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -11,9 +11,9 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
 import androidx.documentfile.provider.DocumentFile
-import com.example.GalleryActivity
-import com.example.R
-import com.example.SettingsActivity
+import com.dikacode.GalleryActivity
+import com.dikacode.R
+import com.dikacode.SettingsActivity
 
 object StorageThresholdNotifier {
 

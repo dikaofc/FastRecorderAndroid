@@ -1,4 +1,4 @@
-package com.example
+package com.dikacode
 
 import android.content.Intent
 import android.graphics.Color
@@ -12,15 +12,15 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.databinding.ActivitySettingsBinding
-import com.example.recorder.AudioMode
-import com.example.recorder.FpsType
-import com.example.recorder.ResolutionType
-import com.example.recorder.SettingsManager
-import com.example.recorder.StorageThreshold
-import com.example.recorder.StorageThresholdNotifier
-import com.example.recorder.StorageUtils
-import com.example.recorder.TempFileCleaner
+import com.dikacode.databinding.ActivitySettingsBinding
+import com.dikacode.recorder.AudioMode
+import com.dikacode.recorder.FpsType
+import com.dikacode.recorder.ResolutionType
+import com.dikacode.recorder.SettingsManager
+import com.dikacode.recorder.StorageThreshold
+import com.dikacode.recorder.StorageThresholdNotifier
+import com.dikacode.recorder.StorageUtils
+import com.dikacode.recorder.TempFileCleaner
 
 class SettingsActivity : AppCompatActivity() {
 

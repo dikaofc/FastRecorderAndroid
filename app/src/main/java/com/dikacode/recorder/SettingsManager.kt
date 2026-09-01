@@ -1,5 +1,5 @@
 // @dikaacode
-package com.example.recorder
+package com.dikacode.recorder
 
 import android.content.Context
 import android.content.SharedPreferences

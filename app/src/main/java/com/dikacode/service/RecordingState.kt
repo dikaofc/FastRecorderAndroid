@@ -1,5 +1,5 @@
 // @dikaacode
-package com.example.service
+package com.dikacode.service
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

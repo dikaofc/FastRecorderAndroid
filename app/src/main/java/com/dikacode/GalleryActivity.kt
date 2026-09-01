@@ -1,5 +1,5 @@
 // @dikaacode
-package com.example
+package com.dikacode
 
 import android.app.Dialog
 import android.content.ClipData
@@ -34,12 +34,12 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.databinding.ActivityGalleryBinding
-import com.example.recorder.CatboxUploader
-import com.example.recorder.SettingsManager
-import com.example.recorder.StorageThreshold
-import com.example.recorder.StorageThresholdNotifier
-import com.example.recorder.StorageUtils
+import com.dikacode.databinding.ActivityGalleryBinding
+import com.dikacode.recorder.CatboxUploader
+import com.dikacode.recorder.SettingsManager
+import com.dikacode.recorder.StorageThreshold
+import com.dikacode.recorder.StorageThresholdNotifier
+import com.dikacode.recorder.StorageUtils
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

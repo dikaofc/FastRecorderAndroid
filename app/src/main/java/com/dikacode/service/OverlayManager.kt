@@ -1,4 +1,4 @@
-package com.example.service
+package com.dikacode.service
 
 import android.annotation.SuppressLint
 import android.content.Context

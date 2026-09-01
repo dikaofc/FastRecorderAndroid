@@ -1,4 +1,4 @@
-package com.example
+package com.dikacode
 
 import org.junit.Assert.*
 import org.junit.Test
