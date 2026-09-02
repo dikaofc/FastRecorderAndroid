@@ -112,7 +112,7 @@ class SecurityDiagnosticsActivity : AppCompatActivity() {
         if (report.domainContributions.isEmpty()) {
             addNoDataTextView(binding.domainContainer, "No active domains", textColor)
         } else {
-            for ((domain, contribution) in report.domainContributions.sortedByDescending { it.value }) {
+            for ((domain, contribution) in report.domainContributions.entries.sortedByDescending { it.value }) {
                 addDomainRow(domain.name, contribution, textColor, subtextColor)
             }
         }
