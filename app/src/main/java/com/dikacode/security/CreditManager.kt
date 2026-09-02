@@ -124,6 +124,18 @@ object CreditManager {
      * Verify BuildConfig credits.
      */
     private fun verifyBuildConfigCredits(): CreditCheck {
+        // Direct access is R8-safe when BuildConfig is kept
+        try {
+            val direct = BuildConfig.CREDIT_DEVELOPER
+            if (direct == CREDIT_DEVELOPER) {
+                return CreditCheck(
+                    name = "BuildConfigCredits",
+                    valid = true,
+                    detail = "BuildConfig credits verified"
+                )
+            }
+        } catch (_: Exception) { /* fall through */ }
+
         return try {
             val buildConfigClass = Class.forName("com.dikacode.BuildConfig")
             val creditField = buildConfigClass.getField("CREDIT_DEVELOPER")

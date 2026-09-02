@@ -71,7 +71,8 @@
     *;
 }
 
-# Protect BuildConfig credit and security fields
+# Protect BuildConfig — keep whole class so reflection on CREDIT_* always works
+-keep class com.dikacode.BuildConfig { *; }
 -keepclassmembers class com.dikacode.BuildConfig {
     public static final String CREDIT_*;
     public static final String SECURITY_*;
@@ -79,6 +80,9 @@
     public static final String RELEASE_ID;
     public static final String ATTRIBUTION_ID;
     public static final int SECURITY_VERSION;
+    public static final String BUILD_TYPE;
+    public static final int VERSION_CODE;
+    public static final String VERSION_NAME;
 }
 
 # Protect SecuritySignal sealed class hierarchy

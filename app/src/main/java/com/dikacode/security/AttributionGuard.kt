@@ -76,8 +76,21 @@ object AttributionGuard {
 
     /**
      * Layer 3: BuildConfig credits.
+     * Uses direct access first (R8-safe), falls back to reflection for tamper detection.
      */
     fun getBuildConfigCredits(): Map<String, String> {
+        // Direct access — always survives R8 if -keep class BuildConfig { *; } is set
+        // and prevents false positive when reflection is blocked by obfuscation.
+        try {
+            val direct = mapOf(
+                "author" to BuildConfig.CREDIT_DEVELOPER,
+                "team" to BuildConfig.CREDIT_TEAM,
+                "url" to BuildConfig.CREDIT_URL
+            )
+            // If direct values are correct, use them immediately
+            if (direct["author"] == ATTRIBUTION_AUTHOR) return direct
+        } catch (_: Exception) { /* fall through to reflection */ }
+
         return try {
             val buildConfigClass = Class.forName("com.dikacode.BuildConfig")
             mapOf(
