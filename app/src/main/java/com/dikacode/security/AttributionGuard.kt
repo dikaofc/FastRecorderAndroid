@@ -3,6 +3,7 @@ package com.dikacode.security
 
 import android.content.Context
 import android.util.Log
+import com.dikacode.BuildConfig
 import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
 

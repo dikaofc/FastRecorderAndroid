@@ -12,7 +12,7 @@ data class SecurityEvent(
     val timestamp: Long = System.currentTimeMillis(),
     val buildId: String,
     val verificationType: VerificationType,
-    val signalDomain: SignalDomain,
+    val signalDomain: RiskAssessment.SignalDomain,
     val riskDelta: Int,
     val resultingRiskScore: Int,
     val resultingState: TrustState,

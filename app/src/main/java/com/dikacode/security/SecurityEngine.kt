@@ -3,6 +3,7 @@ package com.dikacode.security
 
 import android.content.Context
 import android.util.Log
+import com.dikacode.BuildConfig
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 
@@ -60,6 +61,7 @@ object SecurityEngine {
         val attributionState: AttributionState,
         val signals: List<SecuritySignal>,
         val correlationClusters: List<RiskAssessment.CorrelationCluster>,
+        val domainContributions: Map<RiskAssessment.SignalDomain, Int>,
         val eventLog: List<SecurityEvent>,
         val diagnostics: String,
         val policyResponse: SecurityPolicy.PolicyResponse = SecurityPolicy.getResponseForState(trustState, riskScore)
@@ -157,6 +159,7 @@ object SecurityEngine {
             attributionState = attributionResult.attributionState,
             signals = allSignals,
             correlationClusters = riskResult.correlationClusters,
+            domainContributions = riskResult.domainContributions,
             eventLog = eventLog,
             diagnostics = diagnostics,
             policyResponse = policyResponse

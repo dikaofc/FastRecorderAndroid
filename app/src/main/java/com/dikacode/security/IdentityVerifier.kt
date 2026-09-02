@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import com.dikacode.BuildConfig
 import java.security.MessageDigest
 import java.security.cert.CertificateFactory
 import java.util.concurrent.ConcurrentHashMap
