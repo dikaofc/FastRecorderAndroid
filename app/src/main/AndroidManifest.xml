@@ -52,6 +52,10 @@
             android:name=".SecurityDiagnosticsActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
+        <activity
+            android:name=".DeveloperActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

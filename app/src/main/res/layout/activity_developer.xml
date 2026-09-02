@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/devRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/neo_yellow"
+    android:padding="20dp">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:background="@drawable/bg_neo_spinner"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/neo_black"
+            android:contentDescription="Back"/>
+
+        <TextView
+            android:id="@+id/tvDevTitle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="DEVELOPER"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="12dp"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Dev Info Card -->
+            <LinearLayout
+                android:id="@+id/cardDevDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_neo_card"
+                android:padding="14dp">
+
+                <TextView
+                    android:id="@+id/tvDevAppName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FAST RECORDER"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"/>
+
+                <TextView
+                    android:id="@+id/tvDevInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/neo_black"
+                    android:textSize="12sp"
+                    android:layout_marginTop="6dp"/>
+
+                <TextView
+                    android:id="@+id/tvDevMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="APK ini dibuat oleh Dika."
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvDevHandle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Telegram: @dikaacode"
+                    android:textSize="12sp"
+                    android:textColor="#444444"
+                    android:layout_marginTop="2dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MEDIA LANDSCAPE"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"
+                    android:textColor="#777777"
+                    android:layout_marginTop="14dp"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_chip"
+                    android:padding="5dp"
+                    android:layout_marginTop="6dp">
+
+                    <VideoView
+                        android:id="@+id/devVideo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/neo_black"/>
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Telegram Button -->
+            <LinearLayout
+                android:id="@+id/btnTelegram"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/bg_neo_toggle_on"
+                android:layout_marginTop="14dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_telegram"
+                    app:tint="@color/neo_white"
+                    android:layout_marginEnd="6dp"
+                    android:contentDescription="Telegram"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TELEGRAM"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_white"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="14dp">
+
+                <!-- TikTok Button -->
+                <LinearLayout
+                    android:id="@+id/btnTikTok"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/bg_neo_toggle_on"
+                    android:layout_marginEnd="6dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_tiktok"
+                        app:tint="@color/neo_white"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="TikTok"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TIKTOK"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_white"/>
+                </LinearLayout>
+
+                <!-- Instagram Button -->
+                <LinearLayout
+                    android:id="@+id/btnInstagram"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/bg_neo_toggle_on"
+                    android:layout_marginStart="6dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_instagram"
+                        app:tint="@color/neo_white"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="Instagram"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="IG"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_white"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

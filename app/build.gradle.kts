@@ -79,7 +79,6 @@ android {
     buildConfigField("String", "BUILD_ID", "\"${System.currentTimeMillis()}\"")
     buildConfigField("String", "RELEASE_ID", "\"1.0.0\"")
     buildConfigField("String", "ATTRIBUTION_ID", "\"@dikaacode\"")
-    buildConfigField("String", "DEV_MEDIA_URL", "\"https://files.catbox.moe/b4jbxy.mp4\"")
   }
   testOptions { unitTests { isIncludeAndroidResources = true } }
   dependenciesInfo {
