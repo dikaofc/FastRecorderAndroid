@@ -141,12 +141,22 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <!-- Buttons - now inside ScrollView so always reachable by scrolling -->
+        <CheckBox
+            android:id="@+id/cbDeleteAfterInstall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete APK after update (save storage)"
+            android:textSize="12sp"
+            android:textColor="#333333"
+            android:layout_marginTop="14dp"
+            android:checked="true" />
+
+        <!-- Buttons - below checkbox so always reachable by scrolling -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="12dp">
 
             <TextView
                 android:id="@+id/btnCancel"
@@ -183,16 +193,6 @@
                 android:background="@drawable/bg_neo_toggle_on"
                 android:visibility="gone" />
         </LinearLayout>
-
-        <CheckBox
-            android:id="@+id/cbDeleteAfterInstall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete APK after update (save storage)"
-            android:textSize="12sp"
-            android:textColor="#333333"
-            android:layout_marginTop="10dp"
-            android:checked="true" />
 
         <TextView
             android:id="@+id/btnOpenFolder"

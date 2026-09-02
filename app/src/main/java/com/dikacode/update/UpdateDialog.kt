@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.CheckBox
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -140,6 +141,8 @@ object UpdateDialog {
                     tvDownloadPath.visibility = View.VISIBLE
                     tvDownloadPath.text = "Saved to:\n${GitHubUpdater.getPublicDownloadPath(file)}\n\nYou can delete this file manually to free memory:\n${file.absolutePath}"
                     Toast.makeText(activity, "Downloaded to ${file.absolutePath}", Toast.LENGTH_LONG).show()
+                    // auto-scroll to reveal INSTALL + checkbox
+                    (dialogView as? ScrollView)?.post { (dialogView as ScrollView).fullScroll(View.FOCUS_DOWN) }
                 }.onFailure { e ->
                     btnDownload.isEnabled = true
                     btnDownload.text = "RETRY DOWNLOAD"

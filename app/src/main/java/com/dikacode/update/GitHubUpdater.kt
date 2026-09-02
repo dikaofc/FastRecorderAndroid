@@ -100,35 +100,34 @@ object GitHubUpdater {
                 .header("Accept", "application/vnd.github.v3+json")
                 .header("User-Agent", "FastRecorder-Updater")
                 .build()
-            val resp = client.newCall(req).execute()
-            if (!resp.isSuccessful) {
-                return@withContext UpdateResult.Error("GitHub API ${resp.code}: ${resp.message}")
-            }
-            val body = resp.body?.string() ?: return@withContext UpdateResult.Error("Empty response")
-            val arr = JSONArray(body)
-            if (arr.length() == 0) return@withContext UpdateResult.NoUpdate()
-            var latest: ReleaseInfo? = null
-            var latestAsset: Asset? = null
-            for (i in 0 until arr.length()) {
-                val obj = arr.getJSONObject(i)
-                val rel = parseRelease(obj) ?: continue
-                val asset = rel.findApkAsset()
-                if (asset != null) {
-                    latest = rel
-                    latestAsset = asset
-                    break
+            client.newCall(req).execute().use { resp ->
+                if (!resp.isSuccessful) {
+                    return@withContext UpdateResult.Error("GitHub API ${resp.code}: ${resp.message}")
                 }
-            }
-            if (latest == null || latestAsset == null) {
-                return@withContext UpdateResult.NoUpdate()
-            }
-            val currentTag = "v" + getCurrentVersionName(context)
-            val newer = isNewerVersion(latest.tagName, currentTag)
-            if (newer) {
-                UpdateResult.UpdateAvailable(latest, latestAsset)
-            } else {
-                if (latest.tagName != currentTag && latest.tagName != "v" + (BuildConfig.VERSION_NAME ?: "1.0")) {
-                    UpdateResult.NoUpdate(latest)
+                val body = resp.body?.string() ?: return@withContext UpdateResult.Error("Empty response")
+                val arr = JSONArray(body)
+                if (arr.length() == 0) return@withContext UpdateResult.NoUpdate()
+                var latest: ReleaseInfo? = null
+                var latestAsset: Asset? = null
+                for (i in 0 until arr.length()) {
+                    val obj = arr.getJSONObject(i)
+                    if (obj.optBoolean("draft", false)) continue
+                    if (obj.optBoolean("prerelease", false)) continue
+                    val rel = parseRelease(obj) ?: continue
+                    val asset = rel.findApkAsset()
+                    if (asset != null) {
+                        latest = rel
+                        latestAsset = asset
+                        break
+                    }
+                }
+                if (latest == null || latestAsset == null) {
+                    return@withContext UpdateResult.NoUpdate()
+                }
+                val currentTag = "v" + getCurrentVersionName(context)
+                val newer = isNewerVersion(latest.tagName, currentTag)
+                if (newer) {
+                    UpdateResult.UpdateAvailable(latest, latestAsset)
                 } else {
                     UpdateResult.NoUpdate(latest)
                 }
@@ -194,29 +193,30 @@ object GitHubUpdater {
                 .header("User-Agent", "FastRecorder-Updater")
                 .header("Accept", "application/octet-stream")
                 .build()
-            val resp = client.newCall(req).execute()
-            if (!resp.isSuccessful) {
-                return@withContext Result.failure(Exception("Download failed: HTTP ${resp.code}"))
-            }
-            val body = resp.body ?: return@withContext Result.failure(Exception("Empty body"))
-            val total = body.contentLength()
-            var read: Long = 0
-            body.byteStream().use { input ->
-                FileOutputStream(tmp).use { out ->
-                    val buf = ByteArray(32 * 1024)
-                    var n: Int
-                    var lastPercent = -1
-                    while (input.read(buf).also { n = it } != -1) {
-                        out.write(buf, 0, n)
-                        read += n
-                        if (total > 0) {
-                            val pct = ((read * 100) / total).toInt().coerceIn(0, 100)
-                            if (pct != lastPercent) {
-                                lastPercent = pct
-                                withContext(Dispatchers.Main) { onProgress(pct, read, total) }
+            client.newCall(req).execute().use { resp ->
+                if (!resp.isSuccessful) {
+                    return@withContext Result.failure(Exception("Download failed: HTTP ${resp.code}"))
+                }
+                val body = resp.body ?: return@withContext Result.failure(Exception("Empty body"))
+                val total = body.contentLength()
+                var read: Long = 0
+                body.byteStream().use { input ->
+                    FileOutputStream(tmp).use { out ->
+                        val buf = ByteArray(32 * 1024)
+                        var n: Int
+                        var lastPercent = -1
+                        while (input.read(buf).also { n = it } != -1) {
+                            out.write(buf, 0, n)
+                            read += n
+                            if (total > 0) {
+                                val pct = ((read * 100) / total).toInt().coerceIn(0, 100)
+                                if (pct != lastPercent) {
+                                    lastPercent = pct
+                                    withContext(Dispatchers.Main) { onProgress(pct, read, total) }
+                                }
+                            } else {
+                                withContext(Dispatchers.Main) { onProgress(-1, read, total) }
                             }
-                        } else {
-                            withContext(Dispatchers.Main) { onProgress(-1, read, total) }
                         }
                     }
                 }
@@ -225,7 +225,7 @@ object GitHubUpdater {
                 if (destFile.exists()) destFile.delete()
                 tmp.renameTo(destFile)
             }
-            withContext(Dispatchers.Main) { onProgress(100, read, total) }
+            withContext(Dispatchers.Main) { onProgress(100, read, 0) }
             Result.success(destFile)
         } catch (e: Exception) {
             Log.e(TAG, "download failed", e)
