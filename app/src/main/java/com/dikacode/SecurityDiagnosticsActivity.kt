@@ -197,8 +197,8 @@ class SecurityDiagnosticsActivity : AppCompatActivity() {
             ellipsize = android.text.TextUtils.TruncateAt.END
             setTextColor(textColor)
             if (android.os.Build.VERSION.SDK_INT >= 23) {
-                breakStrategy = android.widget.TextView.BREAK_STRATEGY_SIMPLE
-                hyphenationFrequency = android.widget.TextView.HYPHENATION_FREQUENCY_NONE
+                breakStrategy = 0 // BREAK_STRATEGY_SIMPLE
+                hyphenationFrequency = 0 // HYPHENATION_FREQUENCY_NONE
             }
         }
 
@@ -228,8 +228,8 @@ class SecurityDiagnosticsActivity : AppCompatActivity() {
             ellipsize = android.text.TextUtils.TruncateAt.END
             setTextColor(textColor)
             if (android.os.Build.VERSION.SDK_INT >= 23) {
-                breakStrategy = android.widget.TextView.BREAK_STRATEGY_SIMPLE
-                hyphenationFrequency = android.widget.TextView.HYPHENATION_FREQUENCY_NONE
+                breakStrategy = 0 // BREAK_STRATEGY_SIMPLE
+                hyphenationFrequency = 0 // HYPHENATION_FREQUENCY_NONE
             }
         }
 
