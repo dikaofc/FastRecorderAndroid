@@ -231,6 +231,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         applyThemeUI(settingsManager.darkMode)
         updateStatusInfo()
+        updateRecentCard()
     }
 
     private fun applyThemeUI(isDark: Boolean) {
@@ -238,14 +239,28 @@ class MainActivity : AppCompatActivity() {
             window.statusBarColor = Color.parseColor("#121212")
             binding.root.setBackgroundColor(Color.parseColor("#121212"))
             binding.tvTitle.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.headerDivider.setBackgroundColor(Color.parseColor("#2A2A2A"))
             binding.btnSettings.setBackgroundResource(R.drawable.bg_neo_button_dark)
             binding.btnSettings.setColorFilter(Color.parseColor("#FFFFFF"))
             binding.tvTimer.setTextColor(Color.parseColor("#FFFFFF"))
             binding.configCard.setBackgroundResource(R.drawable.bg_neo_card_dark)
-            binding.tvResolution.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.tvAudioInfo.setTextColor(Color.parseColor("#AAAAAA"))
+            binding.tvResValue.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.tvFpsValue.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.tvAudioValue.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.tvSourceValue.setTextColor(Color.parseColor("#FFFFFF"))
             binding.btnGallery.setBackgroundResource(R.drawable.bg_neo_button_dark)
             binding.btnGallery.setColorFilter(Color.parseColor("#FFFFFF"))
+            binding.tvQuickLabel.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.chipRes.setBackgroundResource(R.drawable.bg_chip_dark)
+            binding.chipRes.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.chipFps.setBackgroundResource(R.drawable.bg_chip_dark)
+            binding.chipFps.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.chipAudio.setBackgroundResource(R.drawable.bg_chip_dark)
+            binding.chipAudio.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.recentCard.setBackgroundResource(R.drawable.bg_neo_card_dark)
+            binding.tvRecentInfo.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.btnRecentPlay.setBackgroundResource(R.drawable.bg_neo_button_dark)
+            binding.btnRecentPlay.setColorFilter(Color.parseColor("#FFFFFF"))
             
             if (!RecordingState.isRecording.value) {
                 binding.tvStatus.setTextColor(Color.parseColor("#FFFFFF"))
@@ -254,14 +269,28 @@ class MainActivity : AppCompatActivity() {
             window.statusBarColor = ContextCompat.getColor(this, R.color.neo_yellow)
             binding.root.setBackgroundColor(ContextCompat.getColor(this, R.color.neo_yellow))
             binding.tvTitle.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.headerDivider.setBackgroundColor(Color.parseColor("#0A0A0A"))
             binding.btnSettings.setBackgroundResource(R.drawable.bg_neo_button)
             binding.btnSettings.setColorFilter(Color.parseColor("#0A0A0A"))
             binding.tvTimer.setTextColor(Color.parseColor("#0A0A0A"))
             binding.configCard.setBackgroundResource(R.drawable.bg_neo_card)
-            binding.tvResolution.setTextColor(Color.parseColor("#0A0A0A"))
-            binding.tvAudioInfo.setTextColor(Color.parseColor("#333333"))
+            binding.tvResValue.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.tvFpsValue.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.tvAudioValue.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.tvSourceValue.setTextColor(Color.parseColor("#0A0A0A"))
             binding.btnGallery.setBackgroundResource(R.drawable.bg_neo_button)
             binding.btnGallery.setColorFilter(Color.parseColor("#0A0A0A"))
+            binding.tvQuickLabel.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.chipRes.setBackgroundResource(R.drawable.bg_chip)
+            binding.chipRes.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.chipFps.setBackgroundResource(R.drawable.bg_chip)
+            binding.chipFps.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.chipAudio.setBackgroundResource(R.drawable.bg_chip)
+            binding.chipAudio.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.recentCard.setBackgroundResource(R.drawable.bg_neo_card)
+            binding.tvRecentInfo.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.btnRecentPlay.setBackgroundResource(R.drawable.bg_neo_button)
+            binding.btnRecentPlay.setColorFilter(Color.parseColor("#0A0A0A"))
 
             if (!RecordingState.isRecording.value) {
                 binding.tvStatus.setTextColor(Color.parseColor("#0A0A0A"))
@@ -273,14 +302,45 @@ class MainActivity : AppCompatActivity() {
         val res = settingsManager.resolution
         val fps = settingsManager.fps
         val audio = settingsManager.audioMode
-        val saver = if (settingsManager.batterySaverMode) " | Saver" else ""
+        binding.tvResValue.text = res.label.replace("p","p HD").replace(" HD HD"," HD")
+        binding.tvFpsValue.text = "${fps.value} FPS"
+        binding.tvAudioValue.text = if (audio == AudioMode.NONE) "OFF" else "ON"
+        binding.tvSourceValue.text = when(audio) {
+            AudioMode.NONE -> "—"
+            AudioMode.MIC -> "MIC"
+            AudioMode.INTERNAL -> "INTERNAL"
+            AudioMode.INTERNAL_MIC -> "BOTH"
+        }
+        binding.chipRes.text = res.label
+        binding.chipFps.text = "${fps.value} FPS"
+        binding.chipAudio.text = if (audio == AudioMode.NONE) "AUDIO OFF" else audio.name.replace("_"," ")
+        updateRecentCard()
+    }
 
-        binding.tvResolution.text = "Res: ${res.label} | FPS: ${fps.value}$saver"
-        binding.tvAudioInfo.text = "Audio: ${audio.name}"
+    private fun updateRecentCard() {
+        try {
+            val dir = getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES) ?: filesDir
+            val vids = dir.listFiles()?.filter { it.extension.lowercase() in setOf("mp4","mkv","webm") }?.sortedByDescending { it.lastModified() }
+            val latest = vids?.firstOrNull()
+            if (latest != null) {
+                val fmt = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
+                val d = fmt.format(java.util.Date(latest.lastModified()))
+                val mb = (latest.length() / (1024*1024)).toString()
+                binding.tvRecentInfo.text = "$d \u00b7 ${mb} MB \u00b7 ${latest.name.take(18)}"
+                binding.btnRecentPlay.visibility = View.VISIBLE
+                binding.btnRecentPlay.setOnClickListener { startActivity(Intent(this, GalleryActivity::class.java)) }
+                binding.recentCard.setOnClickListener { startActivity(Intent(this, GalleryActivity::class.java)) }
+            } else {
+                binding.tvRecentInfo.text = "No recordings yet"
+                binding.btnRecentPlay.visibility = View.GONE
+                binding.recentCard.setOnClickListener { startActivity(Intent(this, GalleryActivity::class.java)) }
+            }
+        } catch (_: Exception) {}
     }
 
     private fun setupUI() {
         binding.btnRecContainer.setOnClickListener {
+            it.animate().scaleX(0.96f).scaleY(0.96f).setDuration(90).withEndAction { it.animate().scaleX(1f).scaleY(1f).setDuration(120).start() }.start()
             if (RecordingState.isRecording.value) {
                 val intent = Intent(this@MainActivity, RecordingForegroundService::class.java).apply {
                     action = RecordingForegroundService.ACTION_STOP
@@ -298,6 +358,10 @@ class MainActivity : AppCompatActivity() {
         binding.btnGallery.setOnClickListener {
             startActivity(Intent(this@MainActivity, GalleryActivity::class.java))
         }
+        val openSettings = { startActivity(Intent(this@MainActivity, SettingsActivity::class.java)) }
+        binding.chipRes.setOnClickListener { openSettings() }
+        binding.chipFps.setOnClickListener { openSettings() }
+        binding.chipAudio.setOnClickListener { openSettings() }
     }
 
     private fun requestPermissionsAndStart() {
@@ -326,13 +390,20 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             RecordingState.isRecording.collectLatest { isRecording ->
                 if (isRecording) {
-                    binding.tvStatus.text = "RECORDING"
-                    binding.tvStatus.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.neo_red))
+                    binding.tvStatus.text = "● RECORDING"
+                    binding.tvStatus.setBackgroundResource(R.drawable.bg_pill_red)
+                    binding.tvStatus.setTextColor(Color.parseColor("#FFFFFF"))
+                    binding.tvRecIcon.text = "■"
+                    binding.tvRecIcon.textSize = 28f
+                    binding.recRing.alpha = 1f
                     startPulseAnim()
                 } else {
-                    binding.tvStatus.text = "READY"
-                    val readyColor = if (settingsManager.darkMode) Color.parseColor("#FFFFFF") else ContextCompat.getColor(this@MainActivity, R.color.neo_black)
-                    binding.tvStatus.setTextColor(readyColor)
+                    binding.tvStatus.text = "● READY"
+                    binding.tvStatus.setBackgroundResource(R.drawable.bg_pill_black)
+                    binding.tvStatus.setTextColor(Color.parseColor("#FFFFFF"))
+                    binding.tvRecIcon.text = "●"
+                    binding.tvRecIcon.textSize = 36f
+                    binding.recRing.alpha = 0f
                     stopPulseAnim()
                 }
             }
