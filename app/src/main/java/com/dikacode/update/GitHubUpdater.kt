@@ -193,12 +193,14 @@ object GitHubUpdater {
                 .header("User-Agent", "FastRecorder-Updater")
                 .header("Accept", "application/octet-stream")
                 .build()
+            var totalRead: Long = 0
+            var totalSize: Long = 0
             client.newCall(req).execute().use { resp ->
                 if (!resp.isSuccessful) {
                     return@withContext Result.failure(Exception("Download failed: HTTP ${resp.code}"))
                 }
                 val body = resp.body ?: return@withContext Result.failure(Exception("Empty body"))
-                val total = body.contentLength()
+                totalSize = body.contentLength()
                 var read: Long = 0
                 body.byteStream().use { input ->
                     FileOutputStream(tmp).use { out ->
@@ -208,24 +210,25 @@ object GitHubUpdater {
                         while (input.read(buf).also { n = it } != -1) {
                             out.write(buf, 0, n)
                             read += n
-                            if (total > 0) {
-                                val pct = ((read * 100) / total).toInt().coerceIn(0, 100)
+                            if (totalSize > 0) {
+                                val pct = ((read * 100) / totalSize).toInt().coerceIn(0, 100)
                                 if (pct != lastPercent) {
                                     lastPercent = pct
-                                    withContext(Dispatchers.Main) { onProgress(pct, read, total) }
+                                    withContext(Dispatchers.Main) { onProgress(pct, read, totalSize) }
                                 }
                             } else {
-                                withContext(Dispatchers.Main) { onProgress(-1, read, total) }
+                                withContext(Dispatchers.Main) { onProgress(-1, read, totalSize) }
                             }
                         }
                     }
                 }
+                totalRead = read
             }
             if (tmp.exists()) {
                 if (destFile.exists()) destFile.delete()
                 tmp.renameTo(destFile)
             }
-            withContext(Dispatchers.Main) { onProgress(100, read, 0) }
+            withContext(Dispatchers.Main) { onProgress(100, totalRead, totalSize) }
             Result.success(destFile)
         } catch (e: Exception) {
             Log.e(TAG, "download failed", e)

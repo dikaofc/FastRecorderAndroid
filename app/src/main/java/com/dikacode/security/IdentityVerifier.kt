@@ -195,14 +195,8 @@ object IdentityVerifier {
                 ))
             }
 
-            // Verify version code
-            val versionCode = buildConfigClass.getField("VERSION_CODE").get(null) as? Int
-            if (versionCode != null && versionCode != TRUSTED_VERSION_CODE) {
-                signals.add(SecuritySignal.SignalUnexpectedBuildMetadata(
-                    "Version code mismatch: expected=$TRUSTED_VERSION_CODE, actual=$versionCode"
-                ))
-            }
-
+            // Version code check disabled: versionCode is now GITHUB_RUN_NUMBER (1.0.N)
+            // so strictly checking ==1 would flag every CI release as tampered.
         } catch (e: Exception) {
             Log.e(TAG, "Build metadata verification failed", e)
         }

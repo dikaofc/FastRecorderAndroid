@@ -192,16 +192,16 @@ object SecurityEngine {
     private fun verifyBuildIdentity(context: Context): List<SecuritySignal> {
         val signals = mutableListOf<SecuritySignal>()
 
-        // Check if build is debug in release context
+        // Only flag if release build is debuggable — not for normal release via updater.
+        // Debug builds via app-debug.apk are expected to be debuggable; don't penalize.
         if (BuildConfig.BUILD_TYPE == "release") {
             val isDebuggable = (context.applicationInfo.flags and
                     android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
             if (isDebuggable) {
                 signals.add(SecuritySignal.SignalDebugBuildDetected("Release build is debuggable"))
             }
-        } else {
-            signals.add(SecuritySignal.SignalDebugBuildDetected("Debug build detected"))
         }
+        // Debug build type is not an error — updater and local dev use it
 
         return signals
     }
