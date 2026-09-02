@@ -201,6 +201,7 @@ object RuntimeDetector {
             val process = Runtime.getRuntime().exec(arrayOf("which", "su"))
             val reader = BufferedReader(InputStreamReader(process.inputStream))
             val result = reader.readLine()
+            reader.close()
             process.waitFor()
             !result.isNullOrEmpty()
         } catch (_: Exception) {
@@ -263,9 +264,13 @@ object RuntimeDetector {
 
     private fun executeCommand(command: String): String {
         return try {
-            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
+            // Avoid shell indirection when possible — direct exec is safer.
+            // Only "ss -tlnp" is used; run it without sh -c.
+            val parts = command.trim().split(Regex("\\s+")).toTypedArray()
+            val process = Runtime.getRuntime().exec(parts)
             val reader = BufferedReader(InputStreamReader(process.inputStream))
             val output = reader.readText()
+            reader.close()
             process.waitFor()
             output
         } catch (_: Exception) {
