@@ -309,7 +309,7 @@ class MainActivity : AppCompatActivity() {
             AudioMode.NONE -> "—"
             AudioMode.MIC -> "MIC"
             AudioMode.INTERNAL -> "INTERNAL"
-            AudioMode.INTERNAL_MIC -> "BOTH"
+            AudioMode.BOTH -> "BOTH"
         }
         binding.chipRes.text = res.label
         binding.chipFps.text = "${fps.value} FPS"
