@@ -14,7 +14,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ZETA RECORDER"
+        android:text="FAST RECORDER"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="@color/neo_black"
