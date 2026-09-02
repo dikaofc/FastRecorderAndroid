@@ -58,7 +58,6 @@ object UpdateDialog {
         val btnOpenFolder = dialogView.findViewById<TextView>(activity.resources.getIdentifier("btnOpenFolder", "id", activity.packageName))
         val cbDelete = dialogView.findViewById<CheckBox>(activity.resources.getIdentifier("cbDeleteAfterInstall", "id", activity.packageName))
 
-        // Restore preference for delete checkbox
         val prefs = activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
         cbDelete.isChecked = prefs.getBoolean("delete_after_install", true)
         cbDelete.setOnCheckedChangeListener { _, checked ->
@@ -73,7 +72,42 @@ object UpdateDialog {
         var downloadedFile: File? = null
         val destFile = GitHubUpdater.getDownloadFile(activity, asset, release)
 
-        // If already downloaded, show install directly
+        fun performInstall() {
+            val file = downloadedFile ?: destFile
+            if (!file.exists()) {
+                Toast.makeText(activity, "File not found, please download again", Toast.LENGTH_SHORT).show()
+                return
+            }
+            val shouldDelete = cbDelete.isChecked
+            activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
+                .edit().putBoolean("delete_after_install", shouldDelete).apply()
+            if (shouldDelete) {
+                activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
+                    .edit().putString("pending_delete_apk", file.absolutePath).apply()
+            } else {
+                activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
+                    .edit().remove("pending_delete_apk").apply()
+            }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O && !activity.packageManager.canRequestPackageInstalls()) {
+                Toast.makeText(activity, "Please allow 'Install unknown apps' for FastRecorder in Settings", Toast.LENGTH_LONG).show()
+                try {
+                    activity.startActivity(
+                        android.content.Intent(
+                            android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                            android.net.Uri.parse("package:${activity.packageName}")
+                        )
+                    )
+                } catch (_: Exception) {}
+                return
+            }
+            val ok = GitHubUpdater.installApk(activity, file)
+            if (!ok) Toast.makeText(activity, "Could not launch installer", Toast.LENGTH_SHORT).show()
+            else {
+                if (shouldDelete) Toast.makeText(activity, "APK will be deleted after install", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+        }
+
         if (destFile.exists() && destFile.length() > 0) {
             downloadedFile = destFile
             layoutProgress.visibility = View.VISIBLE
@@ -140,9 +174,10 @@ object UpdateDialog {
                     tvProgressBytes.text = "${GitHubUpdater.formatSize(file.length())} • Ready"
                     tvDownloadPath.visibility = View.VISIBLE
                     tvDownloadPath.text = "Saved to:\n${GitHubUpdater.getPublicDownloadPath(file)}\n\nYou can delete this file manually to free memory:\n${file.absolutePath}"
-                    Toast.makeText(activity, "Downloaded to ${file.absolutePath}", Toast.LENGTH_LONG).show()
-                    // auto-scroll to reveal INSTALL + checkbox
+                    Toast.makeText(activity, "Downloaded — launching installer...", Toast.LENGTH_SHORT).show()
                     (dialogView as? ScrollView)?.post { (dialogView as ScrollView).fullScroll(View.FOCUS_DOWN) }
+                    // auto-install after download (user expects otomatis)
+                    dialogView.postDelayed({ performInstall() }, 600)
                 }.onFailure { e ->
                     btnDownload.isEnabled = true
                     btnDownload.text = "RETRY DOWNLOAD"
@@ -152,43 +187,7 @@ object UpdateDialog {
             }
         }
 
-        btnInstall.setOnClickListener {
-            val file = downloadedFile ?: destFile
-            if (!file.exists()) {
-                Toast.makeText(activity, "File not found, please download again", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            val shouldDelete = cbDelete.isChecked
-            // Persist choice for next time
-            activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
-                .edit().putBoolean("delete_after_install", shouldDelete).apply()
-            if (shouldDelete) {
-                // Mark file to be deleted after install - cleanup on next launch via MainActivity
-                activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
-                    .edit().putString("pending_delete_apk", file.absolutePath).apply()
-            } else {
-                activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
-                    .edit().remove("pending_delete_apk").apply()
-            }
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O && !activity.packageManager.canRequestPackageInstalls()) {
-                Toast.makeText(activity, "Please allow 'Install unknown apps' for FastRecorder in Settings", Toast.LENGTH_LONG).show()
-                try {
-                    activity.startActivity(
-                        android.content.Intent(
-                            android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
-                            android.net.Uri.parse("package:${activity.packageName}")
-                        )
-                    )
-                } catch (_: Exception) {}
-                return@setOnClickListener
-            }
-            val ok = GitHubUpdater.installApk(activity, file)
-            if (!ok) Toast.makeText(activity, "Could not launch installer", Toast.LENGTH_SHORT).show()
-            else {
-                if (shouldDelete) Toast.makeText(activity, "APK will be deleted after install", Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            }
-        }
+        btnInstall.setOnClickListener { performInstall() }
 
         dialog.show()
     }

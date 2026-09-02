@@ -1,6 +1,7 @@
 // @dikaacode
 package com.dikacode.service
 
+import android.app.PendingIntent
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -131,12 +132,7 @@ class RecordingForegroundService : Service() {
             }
             
             createNotificationChannel()
-            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(if (isSaver) "Recording Screen (Battery Saver)" else "Recording Screen")
-                .setContentText("Tap to stop or manage")
-                .setSmallIcon(R.drawable.ic_record)
-                .setOngoing(true)
-                .build()
+            val notification = buildRecordingNotification(isPaused = false, isSaver = isSaver)
         
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 var type = ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
@@ -207,6 +203,7 @@ class RecordingForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             screenRecorder?.pause()
             RecordingState.setPaused(true)
+            updateRecordingNotification(isPaused = true)
         }
     }
     
@@ -214,6 +211,7 @@ class RecordingForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             screenRecorder?.resume()
             RecordingState.setPaused(false)
+            updateRecordingNotification(isPaused = false)
         }
     }
 
@@ -372,6 +370,55 @@ class RecordingForegroundService : Service() {
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
         }
+    }
+
+    private fun buildRecordingNotification(isPaused: Boolean, isSaver: Boolean = false): Notification {
+        val title = when {
+            isPaused -> "Recording Paused"
+            isSaver -> "Recording Screen (Battery Saver)"
+            else -> "Recording Screen"
+        }
+        val text = if (isPaused) "Paused — tap Resume to continue" else "Tap Pause / Stop from notification"
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setSmallIcon(R.drawable.ic_record)
+            .setOngoing(true)
+
+        // Pause / Resume action
+        val toggleIntent = Intent(this, RecordingForegroundService::class.java).apply {
+            action = if (isPaused) ACTION_RESUME else ACTION_PAUSE
+        }
+        val togglePending = PendingIntent.getService(
+            this, if (isPaused) 2 else 1, toggleIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        builder.addAction(
+            NotificationCompat.Action(
+                0,
+                if (isPaused) "Resume" else "Pause",
+                togglePending
+            )
+        )
+        // Stop action
+        val stopIntent = Intent(this, RecordingForegroundService::class.java).apply { action = ACTION_STOP }
+        val stopPending = PendingIntent.getService(
+            this, 3, stopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        builder.addAction(NotificationCompat.Action(0, "Stop", stopPending))
+
+        return builder.build()
+    }
+
+    private fun updateRecordingNotification(isPaused: Boolean) {
+        try {
+            val settings = SettingsManager(this)
+            val isSaver = isBatterySaverActive(settings)
+            val n = buildRecordingNotification(isPaused, isSaver)
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.notify(NOTIFICATION_ID, n)
+        } catch (_: Exception) {}
     }
 
     companion object {
