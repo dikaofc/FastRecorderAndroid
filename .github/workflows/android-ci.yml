@@ -35,10 +35,22 @@ jobs:
 
       - name: Generate debug keystore
         run: |
-          keytool -genkeypair -v -keystore debug.keystore -alias androiddebugkey \
-            -keyalg RSA -keysize 2048 -validity 10000 \
-            -storepass android -keypass android \
-            -dname "CN=Android Debug,O=Android,C=US"
+          if [ -f "debug.keystore" ]; then
+            echo "debug.keystore exists, reusing stable key"
+          else
+            echo "Generating stable debug.keystore (first time, will be committed)"
+            keytool -genkeypair -v -keystore debug.keystore -alias androiddebugkey \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass android -keypass android \
+              -dname "CN=Android Debug,O=Android,C=US"
+            git config user.name "github-actions[bot]" 2>/dev/null || true
+            git config user.email "github-actions[bot]@users.noreply.github.com" 2>/dev/null || true
+            git add -f debug.keystore || true
+            git diff --cached --quiet || git commit -m "chore: add stable debug keystore for consistent signing [skip ci]" || true
+            git push origin main 2>/dev/null || echo "push keystore skipped (no permission or already exists)"
+          fi
+          # Ensure app/ also has it for fallback path
+          cp debug.keystore app/debug.keystore 2>/dev/null || true
 
       - name: Generate google-services.json (stub)
         run: |

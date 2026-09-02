@@ -17,8 +17,8 @@ android {
     applicationId = "com.dika.fastrecorder"
     minSdk = 21
     targetSdk = 34
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1).coerceAtLeast(1)
+    versionName = System.getenv("GITHUB_RUN_NUMBER")?.let { "1.0.$it" } ?: "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
