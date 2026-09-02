@@ -249,6 +249,10 @@ class MainActivity : AppCompatActivity() {
             binding.tvSourceValue.setTextColor(Color.parseColor("#FFFFFF"))
             binding.btnGallery.setBackgroundResource(R.drawable.bg_neo_button_dark)
             binding.btnGallery.setColorFilter(Color.parseColor("#FFFFFF"))
+            binding.btnDev.setBackgroundResource(R.drawable.bg_neo_button_dark)
+            binding.btnDev.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.devCard.setBackgroundResource(R.drawable.bg_neo_card_dark)
+            binding.tvDevInfo.setTextColor(Color.parseColor("#FFFFFF"))
 
             if (!RecordingState.isRecording.value) {
                 binding.tvStatus.setTextColor(Color.parseColor("#FFFFFF"))
@@ -268,6 +272,10 @@ class MainActivity : AppCompatActivity() {
             binding.tvSourceValue.setTextColor(Color.parseColor("#0A0A0A"))
             binding.btnGallery.setBackgroundResource(R.drawable.bg_neo_button)
             binding.btnGallery.setColorFilter(Color.parseColor("#0A0A0A"))
+            binding.btnDev.setBackgroundResource(R.drawable.bg_neo_button)
+            binding.btnDev.setTextColor(Color.parseColor("#0A0A0A"))
+            binding.devCard.setBackgroundResource(R.drawable.bg_neo_card)
+            binding.tvDevInfo.setTextColor(Color.parseColor("#0A0A0A"))
         }
     }
 
@@ -306,7 +314,25 @@ class MainActivity : AppCompatActivity() {
         binding.btnGallery.setOnClickListener {
             startActivity(Intent(this@MainActivity, GalleryActivity::class.java))
         }
+
+        binding.btnDev.setOnClickListener {
+            val show = binding.devCard.visibility != View.VISIBLE
+            binding.devCard.visibility = if (show) View.VISIBLE else View.GONE
+            if (show) {
+                binding.tvDevInfo.text = "dev: ${BuildConfig.CREDIT_DEVELOPER}\n" +
+                    "build: ${BuildConfig.RELEASE_ID} · ${BuildConfig.VERSION_NAME}\n" +
+                    "pkg: ${BuildConfig.SECURITY_PACKAGE}"
+            }
+            if (show && !devVideoStarted) {
+                devVideoStarted = true
+                binding.devVideo.setVideoURI(Uri.parse(BuildConfig.DEV_MEDIA_URL))
+                binding.devVideo.setOnPreparedListener { it.isLooping = true; it.start() }
+                binding.devVideo.setOnErrorListener { _, _, _ -> true }
+            }
+        }
     }
+
+    private var devVideoStarted = false
 
     private fun requestPermissionsAndStart() {
         val permissions = mutableListOf<String>()
