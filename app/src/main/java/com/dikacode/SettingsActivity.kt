@@ -325,7 +325,7 @@ class SettingsActivity : AppCompatActivity() {
                 is GitHubUpdater.UpdateResult.NoUpdate -> {
                     binding.btnCheckUpdate.isEnabled = true
                     binding.btnCheckUpdate.text = "CHECK AGAIN"
-                    binding.tvUpdateStatus.text = "You are up to date ✓"
+                    binding.tvUpdateStatus.text = "You are up to date"
                     binding.tvUpdateStatus.setTextColor(Color.parseColor("#2E7D32"))
                     binding.btnCheckUpdate.setOnClickListener { checkForUpdate() }
                     Toast.makeText(this@SettingsActivity, "Already on latest version", Toast.LENGTH_SHORT).show()

@@ -111,7 +111,7 @@ object UpdateDialog {
         if (destFile.exists() && destFile.length() > 0) {
             downloadedFile = destFile
             layoutProgress.visibility = View.VISIBLE
-            tvProgressLabel.text = "Already downloaded ✓"
+            tvProgressLabel.text = "Already downloaded"
             tvProgressBytes.text = "${GitHubUpdater.formatSize(destFile.length())} • Ready to install"
             tvDownloadPath.visibility = View.VISIBLE
             tvDownloadPath.text = "Saved to:\n${GitHubUpdater.getPublicDownloadPath(destFile)}\n\nYou can delete this file manually to free memory."
@@ -129,7 +129,7 @@ object UpdateDialog {
         }
 
         btnCancel.setOnClickListener { dialog.dismiss() }
-        dialogView.findViewById<TextView>(activity.resources.getIdentifier("btnCloseUpdateX", "id", activity.packageName))?.setOnClickListener { dialog.dismiss() }
+        dialogView.findViewById<View>(activity.resources.getIdentifier("btnCloseUpdateX", "id", activity.packageName))?.setOnClickListener { dialog.dismiss() }
 
         btnOpenFolder.setOnClickListener {
             val path = downloadedFile?.absolutePath ?: destFile.absolutePath
@@ -170,7 +170,7 @@ object UpdateDialog {
                     btnDownload.visibility = View.GONE
                     btnInstall.visibility = View.VISIBLE
                     btnOpenFolder.visibility = View.VISIBLE
-                    tvProgressLabel.text = "Download complete ✓"
+                    tvProgressLabel.text = "Download complete"
                     tvProgressBytes.text = "${GitHubUpdater.formatSize(file.length())} • Ready"
                     tvDownloadPath.visibility = View.VISIBLE
                     tvDownloadPath.text = "Saved to:\n${GitHubUpdater.getPublicDownloadPath(file)}\n\nYou can delete this file manually to free memory:\n${file.absolutePath}"

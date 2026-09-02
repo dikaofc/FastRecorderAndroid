@@ -420,7 +420,7 @@ class MainActivity : AppCompatActivity() {
         btnCloseDevInfo.setOnClickListener {
             dialog.dismiss()
         }
-        dialog.findViewById<TextView>(R.id.btnCloseX)?.setOnClickListener {
+        dialog.findViewById<View>(R.id.btnCloseX)?.setOnClickListener {
             dialog.dismiss()
         }
 

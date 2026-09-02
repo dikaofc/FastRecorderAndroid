@@ -73,7 +73,7 @@ object SecurityPolicy {
                 responseLevel = ResponseLevel.RESTRICT,
                 restrictFeatures = true,
                 showWarning = true,
-                warningMessage = "⚠️ This build is not recognized as an official @dikaacode release. Some features are restricted.",
+                warningMessage = "This build is not recognized as an official @dikaacode release. Some features are restricted.",
                 reverify = true,
                 additionalChecks = true
             )
@@ -82,7 +82,7 @@ object SecurityPolicy {
                 responseLevel = ResponseLevel.QUARANTINE,
                 restrictFeatures = true,
                 showWarning = true,
-                warningMessage = "⚠️ Official attribution could not be verified. This build is not recognized as an official @dikaacode release. Please download from the official source.",
+                warningMessage = "Official attribution could not be verified. This build is not recognized as an official @dikaacode release. Please download from the official source.",
                 reverify = true,
                 additionalChecks = true
             )

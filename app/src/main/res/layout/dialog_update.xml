@@ -30,17 +30,15 @@
                 android:textSize="18sp"
                 android:textColor="#0A0A0A" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/btnCloseUpdateX"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:text="✕"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#0A0A0A"
-                android:gravity="center"
+                android:src="@drawable/ic_close"
+                android:scaleType="centerInside"
+                android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="Close"
@@ -198,12 +196,15 @@
             android:id="@+id/btnOpenFolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📁 Show file location — tap to copy path"
+            android:text="Show file location — tap to copy path"
             android:textSize="11sp"
             android:textColor="#0066CC"
             android:padding="8dp"
             android:visibility="gone"
-            android:gravity="center" />
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_folder"
+            android:drawablePadding="6dp"
+            android:drawableTint="#0066CC" />
 
     </LinearLayout>
 </ScrollView>
