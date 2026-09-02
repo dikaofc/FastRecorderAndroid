@@ -333,10 +333,10 @@ class SettingsActivity : AppCompatActivity() {
                 is GitHubUpdater.UpdateResult.Error -> {
                     binding.btnCheckUpdate.isEnabled = true
                     binding.btnCheckUpdate.text = "RETRY"
-                    binding.tvUpdateStatus.text = "Error: ${res.message.take(40)}"
+                    binding.tvUpdateStatus.text = res.message.take(120)
                     binding.tvUpdateStatus.setTextColor(Color.parseColor("#C62828"))
                     binding.btnCheckUpdate.setOnClickListener { checkForUpdate() }
-                    Toast.makeText(this@SettingsActivity, "Update check failed: ${res.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@SettingsActivity, res.message, Toast.LENGTH_LONG).show()
                 }
             }
         }

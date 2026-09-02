@@ -24,7 +24,19 @@ object GitHubUpdater {
     const val REPO_URL = "https://github.com/dikaofc/FastRecorderAndroid"
 
     private val client by lazy {
-        OkHttpClient.Builder().followRedirects(true).build()
+        OkHttpClient.Builder()
+            .followRedirects(true)
+            .connectTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+            .build()
+    }
+
+    private val noRedirectClient by lazy {
+        OkHttpClient.Builder()
+            .followRedirects(false)
+            .connectTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+            .build()
     }
 
     data class Asset(
@@ -98,11 +110,24 @@ object GitHubUpdater {
             val req = Request.Builder()
                 .url(API_RELEASES)
                 .header("Accept", "application/vnd.github.v3+json")
-                .header("User-Agent", "FastRecorder-Updater")
+                .header("X-GitHub-Api-Version", "2022-11-28")
+                .header("User-Agent", "FastRecorder-Updater/${getCurrentVersionName(context)}")
                 .build()
             client.newCall(req).execute().use { resp ->
                 if (!resp.isSuccessful) {
-                    return@withContext UpdateResult.Error("GitHub API ${resp.code}: ${resp.message}")
+                    val errBody = try { resp.body?.string()?.take(300) ?: "" } catch (_: Exception) { "" }
+                    // 403 = rate limit or forbidden — try web fallback before failing
+                    if (resp.code == 403) {
+                        Log.w(TAG, "API 403, body=$errBody, trying web fallback")
+                        val fallback = fallbackViaWeb(context)
+                        if (fallback != null) return@withContext fallback
+                        val msg = if (errBody.contains("rate limit", true))
+                            "GitHub API limit tercapai (60/jam tanpa login). Coba lagi 5-10 menit atau download manual di $REPO_URL/releases"
+                        else
+                            "GitHub API 403: $errBody — coba lagi nanti atau buka $REPO_URL/releases"
+                        return@withContext UpdateResult.Error(msg)
+                    }
+                    return@withContext UpdateResult.Error("GitHub API ${resp.code}: ${resp.message} $errBody")
                 }
                 val body = resp.body?.string() ?: return@withContext UpdateResult.Error("Empty response")
                 val arr = JSONArray(body)
@@ -134,7 +159,59 @@ object GitHubUpdater {
             }
         } catch (e: Exception) {
             Log.e(TAG, "checkForUpdate failed", e)
+            // Even on exception (timeout etc), try web fallback once
+            try {
+                val fb = fallbackViaWeb(context)
+                if (fb != null) return@withContext fb
+            } catch (_: Exception) {}
             UpdateResult.Error(e.message ?: "Unknown error", e)
+        }
+    }
+
+    private fun fallbackViaWeb(context: Context): UpdateResult? {
+        // GitHub /releases/latest redirects (302) to /releases/tag/vX.Y.Z — no API rate limit
+        return try {
+            val req = Request.Builder()
+                .url("$REPO_URL/releases/latest")
+                .header("User-Agent", "FastRecorder-Updater")
+                .build()
+            noRedirectClient.newCall(req).execute().use { resp ->
+                var tag: String? = null
+                // 302 redirect: Location header holds the tag url
+                val loc = resp.header("Location")
+                if (loc != null) {
+                    tag = Regex("/tag/(v[\\d.]+)").find(loc)?.groupValues?.getOrNull(1)
+                }
+                // If server followed or returned 200, try to parse final URL / body
+                if (tag == null) {
+                    val finalUrl = resp.request.url.toString()
+                    tag = Regex("/tag/(v[\\d.]+)").find(finalUrl)?.groupValues?.getOrNull(1)
+                }
+                if (tag == null) {
+                    // Last try: fetch with followRedirects client and inspect url
+                    client.newCall(Request.Builder().url("$REPO_URL/releases/latest").header("User-Agent","FastRecorder-Updater").build())
+                        .execute().use { r2 ->
+                            val u = r2.request.url.toString()
+                            tag = Regex("/tag/(v[\\d.]+)").find(u)?.groupValues?.getOrNull(1)
+                            if (tag == null) {
+                                val body = try { r2.body?.string() ?: "" } catch (_: Exception) { "" }
+                                tag = Regex("/tag/(v[\\d.]+)").find(body)?.groupValues?.getOrNull(1)
+                            }
+                        }
+                }
+                if (tag == null) return null
+                val currentTag = "v" + getCurrentVersionName(context)
+                if (!isNewerVersion(tag, currentTag)) return UpdateResult.NoUpdate(null)
+                // Build synthetic asset — direct download URL (no API)
+                val dl = "https://github.com/$REPO/releases/download/$tag/app-release.apk"
+                val asset = Asset("app-release.apk", dl, 0L, "application/vnd.android.package-archive")
+                val rel = ReleaseInfo(tag, tag, "Update $tag — download from $REPO_URL/releases/tag/$tag", "$REPO_URL/releases/tag/$tag", "", false, listOf(asset))
+                Log.i(TAG, "fallbackViaWeb success: $tag")
+                UpdateResult.UpdateAvailable(rel, asset)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "fallbackViaWeb failed", e)
+            null
         }
     }
 
