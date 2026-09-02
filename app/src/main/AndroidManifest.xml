@@ -55,6 +55,7 @@
         <activity
             android:name=".DeveloperActivity"
             android:exported="false"
+            android:hardwareAccelerated="true"
             android:theme="@style/Theme.MyApplication" />
 
         <provider
