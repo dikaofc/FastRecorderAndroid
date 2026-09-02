@@ -97,8 +97,8 @@
 
 # Protect credit string resources from removal
 -keepclassmembers class **.R$string {
-    public static *credit_*;
-    public static *app_name;
+    public static int credit_*;
+    public static int app_name;
 }
 
 # ======================================================================
