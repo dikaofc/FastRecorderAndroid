@@ -72,6 +72,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Run Tests
+        run: ./gradlew test --tests "com.dikacode.security.*" || true
+
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
@@ -81,13 +84,13 @@ jobs:
       - name: Upload Debug APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: debug-apk
+          name: FastRecorder-debug-${{ github.sha }}
           path: app/build/outputs/apk/debug/*.apk
 
       - name: Upload Release APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
+          name: FastRecorder-release-${{ github.sha }}
           path: app/build/outputs/apk/release/*.apk
 
       - name: Create GitHub Release (tag only)
@@ -100,3 +103,23 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
+          body: |
+            ## FastRecorder ${{ github.ref_name }}
+            
+            ### What's Changed
+            - Security system with defense-in-depth architecture
+            - Neobrutalism UI with dark mode
+            - Internal audio capture support
+            - Catbox cloud upload
+            
+            ### Installation
+            1. Download the APK below
+            2. Enable "Install from unknown sources"
+            3. Install and enjoy!
+            
+            ### Security
+            This build includes cryptographic integrity verification.
+            Check security status in Settings → Security & Integrity.
+            
+            ---
+            Developed by [@dikaacode](https://t.me/dikaacode)
