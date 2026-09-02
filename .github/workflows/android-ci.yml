@@ -142,19 +142,23 @@ jobs:
 
           # Return to main for post steps
           git checkout main || git checkout -
-      - name: Create GitHub Release (tag only)
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Create GitHub Release (auto on main + tag)
+        if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('auto-{0}', github.sha) }}
+          name: ${{ startsWith(github.ref, 'refs/tags/v') && format('FastRecorder {0}', github.ref_name) || format('FastRecorder auto {0}', github.sha) }}
           files: |
             app/build/outputs/apk/release/*.apk
             app/build/outputs/apk/debug/*.apk
           generate_release_notes: true
           draft: false
-          prerelease: false
+          prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
           body: |
             ## FastRecorder ${{ github.ref_name }}
-            
+
+            Auto-built from `${{ github.sha }}` — run `${{ github.run_id }}`
+
             ### What's Changed
             - Security system with defense-in-depth architecture
             - Neobrutalism UI with dark mode
