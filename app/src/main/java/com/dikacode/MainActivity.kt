@@ -31,8 +31,10 @@ import com.dikacode.recorder.TempFileCleaner
 import com.dikacode.service.RecordingForegroundService
 import com.dikacode.service.RecordingState
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
@@ -89,8 +91,7 @@ class MainActivity : AppCompatActivity() {
         initSecurity()
 
         // Background auto purge of temp files older than 24h
-        lifecycleScope.launch {
-            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        lifecycleScope.launch {                withContext(Dispatchers.IO) {
                 TempFileCleaner.purgeOldTempFiles(this@MainActivity)
             }
         }
@@ -106,30 +107,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initSecurity() {
-        lifecycleScope.launch {
-            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        lifecycleScope.launch {                withContext(Dispatchers.IO) {
                 try {
-                    // Run security checks
-                    val securityResult = com.dikacode.security.SecurityManager.performFullCheck(this@MainActivity)
-                    val creditResult = com.dikacode.security.CreditManager.verifyCredits(this@MainActivity)
+                    // Initialize security engine
+                    com.dikacode.security.SecurityEngine.initialize(this@MainActivity)
 
-                    if (securityResult.isTampered) {
-                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    // Run full security verification
+                    val report = com.dikacode.security.SecurityEngine.verify(this@MainActivity)
+
+                    // Log diagnostics
+                    android.util.Log.i("Security", report.diagnostics)
+
+                    // Show user-facing warnings based on policy response
+                    withContext(Dispatchers.Main) {
+                        val policy = report.policyResponse
+
+                        if (policy.showWarning && policy.warningMessage != null) {
                             Toast.makeText(
                                 this@MainActivity,
-                                "⚠️ Security warning: This app has been tampered with!",
+                                policy.warningMessage,
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                    }
 
-                    if (!creditResult.allCreditsValid) {
-                        android.util.Log.w("Security", "Credit verification failed - possible tampering")
-                    }
+                        // Attribution check
+                        if (report.attributionState != com.dikacode.security.AttributionState.VERIFIED) {
+                            android.util.Log.w("Security", "Attribution could not be verified: ${report.attributionState}")
+                        }
 
-                    // Log security status
-                    android.util.Log.i("Security", "Security check: allPassed=${securityResult.allChecksPassed}, tampered=${securityResult.isTampered}")
-                    android.util.Log.i("Security", "Credit check: allValid=${creditResult.allCreditsValid}")
+                        // Log policy decision
+                        com.dikacode.security.SecurityPolicy.logPolicyDecision(
+                            report.trustState,
+                            report.riskScore,
+                            "Startup verification complete"
+                        )
+                    }
                 } catch (e: Exception) {
                     android.util.Log.e("Security", "Security init failed", e)
                 }

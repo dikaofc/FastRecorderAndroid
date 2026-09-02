@@ -76,6 +76,9 @@ android {
     buildConfigField("String", "CREDIT_URL", '"https://t.me/dikaacode"')
     buildConfigField("String", "SECURITY_PACKAGE", '"com.dika.fastrecorder"')
     buildConfigField("int", "SECURITY_VERSION", '2')
+    buildConfigField("String", "BUILD_ID", '"${System.currentTimeMillis()}"')
+    buildConfigField("String", "RELEASE_ID", '"1.0.0"')
+    buildConfigField("String", "ATTRIBUTION_ID", '"@dikaacode"')
   }
   testOptions { unitTests { isIncludeAndroidResources = true } }
   dependenciesInfo {

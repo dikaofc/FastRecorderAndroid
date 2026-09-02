@@ -199,7 +199,7 @@ object CreditManager {
             team = CREDIT_TEAM,
             app = CREDIT_APP,
             url = CREDIT_URL,
-            version = SecurityManager.SECURITY_VERSION
+            version = BuildConfig.SECURITY_VERSION
         )
     }
 
