@@ -231,7 +231,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         applyThemeUI(settingsManager.darkMode)
         updateStatusInfo()
-        updateRecentCard()
     }
 
     private fun applyThemeUI(isDark: Boolean) {
@@ -250,18 +249,7 @@ class MainActivity : AppCompatActivity() {
             binding.tvSourceValue.setTextColor(Color.parseColor("#FFFFFF"))
             binding.btnGallery.setBackgroundResource(R.drawable.bg_neo_button_dark)
             binding.btnGallery.setColorFilter(Color.parseColor("#FFFFFF"))
-            binding.tvQuickLabel.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.chipRes.setBackgroundResource(R.drawable.bg_chip_dark)
-            binding.chipRes.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.chipFps.setBackgroundResource(R.drawable.bg_chip_dark)
-            binding.chipFps.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.chipAudio.setBackgroundResource(R.drawable.bg_chip_dark)
-            binding.chipAudio.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.recentCard.setBackgroundResource(R.drawable.bg_neo_card_dark)
-            binding.tvRecentInfo.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.btnRecentPlay.setBackgroundResource(R.drawable.bg_neo_button_dark)
-            binding.btnRecentPlay.setColorFilter(Color.parseColor("#FFFFFF"))
-            
+
             if (!RecordingState.isRecording.value) {
                 binding.tvStatus.setTextColor(Color.parseColor("#FFFFFF"))
             }
@@ -280,21 +268,6 @@ class MainActivity : AppCompatActivity() {
             binding.tvSourceValue.setTextColor(Color.parseColor("#0A0A0A"))
             binding.btnGallery.setBackgroundResource(R.drawable.bg_neo_button)
             binding.btnGallery.setColorFilter(Color.parseColor("#0A0A0A"))
-            binding.tvQuickLabel.setTextColor(Color.parseColor("#0A0A0A"))
-            binding.chipRes.setBackgroundResource(R.drawable.bg_chip)
-            binding.chipRes.setTextColor(Color.parseColor("#0A0A0A"))
-            binding.chipFps.setBackgroundResource(R.drawable.bg_chip)
-            binding.chipFps.setTextColor(Color.parseColor("#0A0A0A"))
-            binding.chipAudio.setBackgroundResource(R.drawable.bg_chip)
-            binding.chipAudio.setTextColor(Color.parseColor("#0A0A0A"))
-            binding.recentCard.setBackgroundResource(R.drawable.bg_neo_card)
-            binding.tvRecentInfo.setTextColor(Color.parseColor("#0A0A0A"))
-            binding.btnRecentPlay.setBackgroundResource(R.drawable.bg_neo_button)
-            binding.btnRecentPlay.setColorFilter(Color.parseColor("#0A0A0A"))
-
-            if (!RecordingState.isRecording.value) {
-                binding.tvStatus.setTextColor(Color.parseColor("#0A0A0A"))
-            }
         }
     }
 
@@ -311,31 +284,6 @@ class MainActivity : AppCompatActivity() {
             AudioMode.INTERNAL -> "INTERNAL"
             AudioMode.BOTH -> "BOTH"
         }
-        binding.chipRes.text = res.label
-        binding.chipFps.text = "${fps.value} FPS"
-        binding.chipAudio.text = if (audio == AudioMode.NONE) "AUDIO OFF" else audio.name.replace("_"," ")
-        updateRecentCard()
-    }
-
-    private fun updateRecentCard() {
-        try {
-            val dir = getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES) ?: filesDir
-            val vids = dir.listFiles()?.filter { it.extension.lowercase() in setOf("mp4","mkv","webm") }?.sortedByDescending { it.lastModified() }
-            val latest = vids?.firstOrNull()
-            if (latest != null) {
-                val fmt = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
-                val d = fmt.format(java.util.Date(latest.lastModified()))
-                val mb = (latest.length() / (1024*1024)).toString()
-                binding.tvRecentInfo.text = "$d \u00b7 ${mb} MB \u00b7 ${latest.name.take(18)}"
-                binding.btnRecentPlay.visibility = View.VISIBLE
-                binding.btnRecentPlay.setOnClickListener { startActivity(Intent(this, GalleryActivity::class.java)) }
-                binding.recentCard.setOnClickListener { startActivity(Intent(this, GalleryActivity::class.java)) }
-            } else {
-                binding.tvRecentInfo.text = "No recordings yet"
-                binding.btnRecentPlay.visibility = View.GONE
-                binding.recentCard.setOnClickListener { startActivity(Intent(this, GalleryActivity::class.java)) }
-            }
-        } catch (_: Exception) {}
     }
 
     private fun setupUI() {
@@ -358,10 +306,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnGallery.setOnClickListener {
             startActivity(Intent(this@MainActivity, GalleryActivity::class.java))
         }
-        val openSettings = { startActivity(Intent(this@MainActivity, SettingsActivity::class.java)) }
-        binding.chipRes.setOnClickListener { openSettings() }
-        binding.chipFps.setOnClickListener { openSettings() }
-        binding.chipAudio.setOnClickListener { openSettings() }
     }
 
     private fun requestPermissionsAndStart() {

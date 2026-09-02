@@ -255,131 +255,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- QUICK SETTINGS chips — manfaatkan ruang kosong -->
-    <TextView
-        android:id="@+id/tvQuickLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="QUICK SETTINGS"
-        android:textSize="11sp"
-        android:textStyle="bold"
-        android:letterSpacing="0.08"
-        android:textColor="@color/neo_black"
-        android:layout_marginTop="14dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintTop_toBottomOf="@id/configCard"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <LinearLayout
-        android:id="@+id/quickSettingsRow"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintTop_toBottomOf="@id/tvQuickLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:id="@+id/chipRes"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:gravity="center"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:text="720p"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:textColor="@color/neo_black"
-            android:background="@drawable/bg_chip"/>
-
-        <TextView
-            android:id="@+id/chipFps"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:gravity="center"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:layout_marginStart="8dp"
-            android:text="60 FPS"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:textColor="@color/neo_black"
-            android:background="@drawable/bg_chip"/>
-
-        <TextView
-            android:id="@+id/chipAudio"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:gravity="center"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:layout_marginStart="8dp"
-            android:text="AUDIO OFF"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:textColor="@color/neo_black"
-            android:background="@drawable/bg_chip"/>
-    </LinearLayout>
-
-    <!-- RECENT RECORDING — isi ruang kosong, clean -->
-    <LinearLayout
-        android:id="@+id/recentCard"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="@drawable/bg_neo_card"
-        android:padding="14dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="14dp"
-        app:layout_constraintTop_toBottomOf="@id/quickSettingsRow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RECENT RECORDING"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08"
-                android:textColor="#777777"/>
-
-            <TextView
-                android:id="@+id/tvRecentInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No recordings yet"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:textColor="@color/neo_black"
-                android:layout_marginTop="4dp"
-                android:maxLines="1"
-                android:ellipsize="end"/>
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/btnRecentPlay"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:padding="10dp"
-            android:background="@drawable/bg_neo_button"
-            android:src="@drawable/ic_play_arrow"
-            app:tint="@color/neo_black"
-            android:visibility="gone"/>
-    </LinearLayout>
-
     <!-- BOTTOM CONTROLS: gallery + REC sejajar visual -->
     <LinearLayout
         android:id="@+id/bottomControls"
@@ -394,7 +269,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="22dp"
         android:layout_marginTop="14dp"
-        app:layout_constraintTop_toBottomOf="@id/recentCard"
+        app:layout_constraintTop_toBottomOf="@id/configCard"
         app:layout_constraintVertical_bias="1.0">
 
         <ImageView
