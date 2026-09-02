@@ -93,6 +93,55 @@ jobs:
           name: FastRecorder-release-${{ github.sha }}
           path: app/build/outputs/apk/release/*.apk
 
+      - name: Deploy APK to release branch
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Fetch release branch if exists
+          git fetch origin release 2>/dev/null || true
+
+          # Create/update release branch orphan-style with only apks + README
+          git checkout -B release
+
+          # Ensure apks directory
+          mkdir -p apks
+
+          # Copy built APKs (force)
+          cp app/build/outputs/apk/debug/*.apk apks/ 2>/dev/null || echo "No debug APK"
+          cp app/build/outputs/apk/release/*.apk apks/ 2>/dev/null || echo "No release APK"
+
+          # Generate simple index README
+          cat > apks/README.md << EOF2
+          # FastRecorder APKs — auto-built from main
+
+          Last commit: ${{ github.sha }}
+          Built: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          Workflow: ${{ github.run_id }}
+
+          ## Download
+          - Debug: check apks/*debug*.apk
+          - Release: check apks/*release*.apk
+
+          > This branch is auto-updated on every push to main. Do not edit manually.
+          EOF2
+
+          # .gitignore ignores *.apk, so force add
+          git add -f apks/*.apk apks/README.md
+
+          # Only commit if changed
+          if git diff --cached --quiet; then
+            echo "No APK changes to commit"
+          else
+            git commit -m "chore(release): update APKs from ${{ github.sha }} [skip ci]"
+            git push -f origin release
+            echo "Pushed to release branch"
+          fi
+
+          # Return to main for post steps
+          git checkout main || git checkout -
       - name: Create GitHub Release (tag only)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
