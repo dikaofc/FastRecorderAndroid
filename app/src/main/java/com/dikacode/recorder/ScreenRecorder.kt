@@ -64,6 +64,11 @@ class ScreenRecorder(
     private var pauseStartTime = 0L
     private var totalPauseDurationUs = 0L
 
+    // PTS normalization — video encoder PTS starts at device uptime (~25h), audio starts at 0.
+    // Without this, muxer duration = max(videoPts, audioPts) = uptime → 25:43:17 bug.
+    private var videoPtsOffsetUs: Long = -1L
+    private var audioPtsOffsetUs: Long = -1L
+
     private var videoDrainThread: Thread? = null
     private var audioRecordThread: Thread? = null
     private var audioDrainThread: Thread? = null
@@ -103,6 +108,8 @@ class ScreenRecorder(
             isPaused.set(false)
             pauseStartTime = 0L
             totalPauseDurationUs = 0L
+            videoPtsOffsetUs = -1L
+            audioPtsOffsetUs = -1L
 
             // Start drain threads
             startVideoDrainThread()
@@ -282,17 +289,17 @@ class ScreenRecorder(
                             }
                         }
                         else -> {
-                            if (outputBufferIndex >= 0) {
-                                val outputBuffer = encoder.getOutputBuffer(outputBufferIndex)
-                                if (outputBuffer != null && bufferInfo.size > 0 && (bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) == 0) {
-                                    adjustPresentationTime(bufferInfo)
-                                    if (!isPaused.get()) {
-                                        writeSampleData(true, outputBuffer, bufferInfo)
+                                if (outputBufferIndex >= 0) {
+                                    val outputBuffer = encoder.getOutputBuffer(outputBufferIndex)
+                                    if (outputBuffer != null && bufferInfo.size > 0 && (bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) == 0) {
+                                        adjustPresentationTime(true, bufferInfo)
+                                        if (!isPaused.get()) {
+                                            writeSampleData(true, outputBuffer, bufferInfo)
+                                        }
                                     }
+                                    encoder.releaseOutputBuffer(outputBufferIndex, false)
                                 }
-                                encoder.releaseOutputBuffer(outputBufferIndex, false)
                             }
-                        }
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in video drain loop", e)
@@ -439,7 +446,7 @@ class ScreenRecorder(
                             if (outputBufferIndex >= 0) {
                                 val outputBuffer = encoder.getOutputBuffer(outputBufferIndex)
                                 if (outputBuffer != null && bufferInfo.size > 0 && (bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) == 0) {
-                                    adjustPresentationTime(bufferInfo)
+                                    adjustPresentationTime(false, bufferInfo)
                                     if (!isPaused.get()) {
                                         writeSampleData(false, outputBuffer, bufferInfo)
                                     }
@@ -470,8 +477,11 @@ class ScreenRecorder(
                     muxerStarted = true
                     Log.d(TAG, "MediaMuxer started successfully")
 
-                    // Flush pending video buffers
+                    // Flush pending buffers with PTS normalization (pending were stored with raw PTS)
                     for (pending in pendingVideoBuffers) {
+                        // Re-normalize before write
+                        if (videoPtsOffsetUs == -1L) videoPtsOffsetUs = pending.bufferInfo.presentationTimeUs
+                        pending.bufferInfo.presentationTimeUs = (pending.bufferInfo.presentationTimeUs - videoPtsOffsetUs - totalPauseDurationUs).coerceAtLeast(0L)
                         val track = if (pending.isVideo) videoTrackIndex else audioTrackIndex
                         if (track >= 0) {
                             muxer?.writeSampleData(track, pending.buffer, pending.bufferInfo)
@@ -481,6 +491,8 @@ class ScreenRecorder(
 
                     // Flush pending audio buffers
                     for (pending in pendingAudioBuffers) {
+                        if (audioPtsOffsetUs == -1L) audioPtsOffsetUs = pending.bufferInfo.presentationTimeUs
+                        pending.bufferInfo.presentationTimeUs = (pending.bufferInfo.presentationTimeUs - audioPtsOffsetUs - totalPauseDurationUs).coerceAtLeast(0L)
                         val track = if (pending.isVideo) videoTrackIndex else audioTrackIndex
                         if (track >= 0) {
                             muxer?.writeSampleData(track, pending.buffer, pending.bufferInfo)
@@ -531,9 +543,19 @@ class ScreenRecorder(
         }
     }
 
-    private fun adjustPresentationTime(bufferInfo: MediaCodec.BufferInfo) {
-        if (totalPauseDurationUs > 0) {
-            bufferInfo.presentationTimeUs = (bufferInfo.presentationTimeUs - totalPauseDurationUs).coerceAtLeast(0L)
+    private fun adjustPresentationTime(isVideo: Boolean, bufferInfo: MediaCodec.BufferInfo) {
+        if (isVideo) {
+            if (videoPtsOffsetUs == -1L) {
+                videoPtsOffsetUs = bufferInfo.presentationTimeUs
+                Log.d(TAG, "Video PTS offset captured: $videoPtsOffsetUs us")
+            }
+            bufferInfo.presentationTimeUs = (bufferInfo.presentationTimeUs - videoPtsOffsetUs - totalPauseDurationUs).coerceAtLeast(0L)
+        } else {
+            if (audioPtsOffsetUs == -1L) {
+                audioPtsOffsetUs = bufferInfo.presentationTimeUs
+                Log.d(TAG, "Audio PTS offset captured: $audioPtsOffsetUs us")
+            }
+            bufferInfo.presentationTimeUs = (bufferInfo.presentationTimeUs - audioPtsOffsetUs - totalPauseDurationUs).coerceAtLeast(0L)
         }
     }
 
@@ -591,7 +613,7 @@ class ScreenRecorder(
                 if (index >= 0) {
                     val buffer = encoder.getOutputBuffer(index)
                     if (buffer != null && bufferInfo.size > 0 && (bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) == 0) {
-                        adjustPresentationTime(bufferInfo)
+                        adjustPresentationTime(true, bufferInfo)
                         writeSampleData(true, buffer, bufferInfo)
                     }
                     encoder.releaseOutputBuffer(index, false)
@@ -615,7 +637,7 @@ class ScreenRecorder(
                 if (index >= 0) {
                     val buffer = encoder.getOutputBuffer(index)
                     if (buffer != null && bufferInfo.size > 0 && (bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) == 0) {
-                        adjustPresentationTime(bufferInfo)
+                        adjustPresentationTime(false, bufferInfo)
                         writeSampleData(false, buffer, bufferInfo)
                     }
                     encoder.releaseOutputBuffer(index, false)
