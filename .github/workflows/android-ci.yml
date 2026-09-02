@@ -73,7 +73,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Tests
-        run: ./gradlew test --tests "com.dikacode.security.*" || true
+        run: ./gradlew testDebugUnitTest --tests "com.dikacode.security.*" || true
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
