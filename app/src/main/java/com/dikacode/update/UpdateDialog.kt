@@ -94,6 +94,7 @@ object UpdateDialog {
         }
 
         btnCancel.setOnClickListener { dialog.dismiss() }
+        dialogView.findViewById<TextView>(activity.resources.getIdentifier("btnCloseUpdateX", "id", activity.packageName))?.setOnClickListener { dialog.dismiss() }
 
         btnOpenFolder.setOnClickListener {
             val path = downloadedFile?.absolutePath ?: destFile.absolutePath
