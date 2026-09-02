@@ -103,33 +103,32 @@ jobs:
           # Fetch release branch if exists
           git fetch origin release 2>/dev/null || true
 
-          # Create/update release branch orphan-style with only apks + README
+          # Create/update release branch — 2 APKs langsung di root release (bukan di folder)
           git checkout -B release
 
-          # Ensure apks directory
-          mkdir -p apks
+          # Copy built APKs langsung ke root release branch
+          cp app/build/outputs/apk/debug/*.apk ./ 2>/dev/null || echo "No debug APK"
+          cp app/build/outputs/apk/release/*.apk ./ 2>/dev/null || echo "No release APK"
+          # Bersihin folder apks lama biar gak dobel
+          rm -rf apks 2>/dev/null || true
 
-          # Copy built APKs (force)
-          cp app/build/outputs/apk/debug/*.apk apks/ 2>/dev/null || echo "No debug APK"
-          cp app/build/outputs/apk/release/*.apk apks/ 2>/dev/null || echo "No release APK"
-
-          # Generate simple index README
-          cat > apks/README.md << EOF2
+          # Generate simple index README di root
+          cat > README.md << EOF2
           # FastRecorder APKs — auto-built from main
 
           Last commit: ${{ github.sha }}
           Built: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
           Workflow: ${{ github.run_id }}
 
-          ## Download
-          - Debug: check apks/*debug*.apk
-          - Release: check apks/*release*.apk
+          ## Download — 2 APK langsung di release branch
+          - \`app-debug.apk\` — debug build
+          - \`app-release.apk\` — release build (R8 optimized)
 
           > This branch is auto-updated on every push to main. Do not edit manually.
           EOF2
 
-          # .gitignore ignores *.apk, so force add
-          git add -f apks/*.apk apks/README.md
+          # .gitignore ignores *.apk, so force add 2 APKs di root
+          git add -f *.apk README.md
 
           # Only commit if changed
           if git diff --cached --quiet; then
