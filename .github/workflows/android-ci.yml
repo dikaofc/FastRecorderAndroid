@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -173,24 +175,15 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            ## FastRecorder ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v1.0.{0}', github.run_number) }}
-
             Auto-built from `${{ github.sha }}` — run `${{ github.run_id }}` — `v1.0.${{ github.run_number }}`
 
-            ### What's Changed
-            - Security system with defense-in-depth architecture
-            - Neobrutalism UI with dark mode
-            - Internal audio capture support
-            - Catbox cloud upload
-            
             ### Installation
-            1. Download the APK below
+            1. Download `app-release.apk` below (recommended) or `app-debug.apk`
             2. Enable "Install from unknown sources"
-            3. Install and enjoy!
-            
+            3. Install and enjoy — or use in-app `Settings → App Update → CHECK FOR UPDATE`
+
             ### Security
-            This build includes cryptographic integrity verification.
-            Check security status in Settings → Security & Integrity.
-            
+            Integrity verified. Check `Settings → Security & Integrity`.
+
             ---
-            Developed by [@dikaacode](https://t.me/dikaacode)
+            Developed by [@dikaacode](https://t.me/dikaacode) — FAST RECORDER
