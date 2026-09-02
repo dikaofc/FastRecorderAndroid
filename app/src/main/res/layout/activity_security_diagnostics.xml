@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/securityRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/neo_yellow"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:background="@drawable/bg_neo_spinner"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/neo_black"
+            android:contentDescription="Back"/>
+
+        <TextView
+            android:id="@+id/tvSecurityTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SECURITY"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/neo_black"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/securityCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_neo_card"
+            android:padding="16dp">
+
+            <!-- Trust State Banner -->
+            <LinearLayout
+                android:id="@+id/trustStateBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_neo_spinner"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvTrustStateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TRUST STATE"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvTrustState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TRUSTED"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_green"/>
+
+                <TextView
+                    android:id="@+id/tvTrustDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No threats detected"
+                    android:textSize="13sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <!-- Risk Score -->
+            <TextView
+                android:id="@+id/lblRiskScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Risk Score"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="14dp">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="24dp"
+                    android:background="@drawable/bg_neo_progress_container"
+                    android:padding="2dp">
+
+                    <View
+                        android:id="@+id/riskProgressFill"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_neo_progress_fill"/>
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvRiskScoreValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_black"
+                    android:layout_marginStart="12dp"/>
+            </LinearLayout>
+
+            <!-- Response Level -->
+            <TextView
+                android:id="@+id/lblResponseLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Response Level"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvResponseLevel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ALLOW"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:background="@drawable/bg_neo_spinner"
+                android:padding="12dp"
+                android:layout_marginBottom="14dp"/>
+
+            <!-- Confidence -->
+            <TextView
+                android:id="@+id/lblConfidence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confidence"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvConfidence"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="HIGH"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:background="@drawable/bg_neo_spinner"
+                android:padding="12dp"
+                android:layout_marginBottom="14dp"/>
+
+            <!-- Attribution Status -->
+            <TextView
+                android:id="@+id/lblAttribution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attribution Status"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="6dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_neo_spinner"
+                android:padding="12dp"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:id="@+id/tvAttributionState"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="VERIFIED"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_green"/>
+
+                <TextView
+                    android:id="@+id/tvAttributionAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@dikaacode"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#666666"/>
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#E0E0E0"
+                android:layout_marginVertical="8dp"/>
+
+            <!-- Domain Contributions -->
+            <TextView
+                android:id="@+id/lblDomains"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Domain Contributions"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:id="@+id/domainContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="14dp"/>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#E0E0E0"
+                android:layout_marginVertical="8dp"/>
+
+            <!-- Active Signals -->
+            <TextView
+                android:id="@+id/lblSignals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Active Signals"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:id="@+id/signalsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="14dp"/>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#E0E0E0"
+                android:layout_marginVertical="8dp"/>
+
+            <!-- Correlation Clusters -->
+            <TextView
+                android:id="@+id/lblClusters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Correlation Clusters"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:id="@+id/clustersContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="14dp"/>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#E0E0E0"
+                android:layout_marginVertical="8dp"/>
+
+            <!-- Diagnostics Log -->
+            <TextView
+                android:id="@+id/lblDiagnostics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Diagnostics Log"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvDiagnostics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Loading..."
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:textColor="#333333"
+                android:background="@drawable/bg_neo_spinner"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Refresh Button -->
+            <TextView
+                android:id="@+id/btnRefresh"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="REFRESH SECURITY CHECK"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_white"
+                android:background="@drawable/bg_neo_toggle_on"
+                android:layout_marginBottom="14dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

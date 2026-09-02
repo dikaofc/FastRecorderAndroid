@@ -267,6 +267,10 @@ class SettingsActivity : AppCompatActivity() {
             updateCacheSizeDisplay()
             updateStorageUsageUI()
         }
+
+        binding.btnSecurityDiagnostics.setOnClickListener {
+            startActivity(Intent(this, SecurityDiagnosticsActivity::class.java))
+        }
     }
 
     private fun updateToggle(textView: TextView, isOn: Boolean) {
@@ -334,6 +338,8 @@ class SettingsActivity : AppCompatActivity() {
 
             binding.btnClearCache.setBackgroundResource(R.drawable.bg_neo_spinner_dark)
             binding.btnClearCache.setTextColor(whiteColor)
+            binding.tvSecurityStatus.setTextColor(Color.parseColor("#00E676"))
+            binding.btnSecurityDiagnostics.setBackgroundResource(R.drawable.bg_neo_button_danger)
         } else {
             window.statusBarColor = ContextCompat.getColor(this, R.color.neo_yellow)
             binding.settingsRoot.setBackgroundColor(ContextCompat.getColor(this, R.color.neo_yellow))
@@ -386,6 +392,8 @@ class SettingsActivity : AppCompatActivity() {
 
             binding.btnClearCache.setBackgroundResource(R.drawable.bg_neo_spinner)
             binding.btnClearCache.setTextColor(blackColor)
+            binding.tvSecurityStatus.setTextColor(ContextCompat.getColor(this, R.color.neo_green))
+            binding.btnSecurityDiagnostics.setBackgroundResource(R.drawable.bg_neo_button_danger)
         }
     }
 }
