@@ -21,6 +21,10 @@ import com.dikacode.recorder.StorageThreshold
 import com.dikacode.recorder.StorageThresholdNotifier
 import com.dikacode.recorder.StorageUtils
 import com.dikacode.recorder.TempFileCleaner
+import androidx.lifecycle.lifecycleScope
+import com.dikacode.update.GitHubUpdater
+import com.dikacode.update.UpdateDialog
+import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -76,6 +80,7 @@ class SettingsActivity : AppCompatActivity() {
         setupSpinners()
         setupSwitches()
         setupStorageActions()
+        setupUpdateSection()
         updateStorageUsageUI()
         updateCacheSizeDisplay()
     }
@@ -270,6 +275,67 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.btnSecurityDiagnostics.setOnClickListener {
             startActivity(Intent(this, SecurityDiagnosticsActivity::class.java))
+        }
+    }
+
+    private fun setupUpdateSection() {
+        val currentVer = GitHubUpdater.getCurrentVersion(this)
+        binding.tvCurrentVersion.text = "Current: $currentVer"
+        binding.tvUpdateStatus.text = "Tap check"
+        binding.btnCheckUpdate.setOnClickListener { checkForUpdate() }
+
+        // Show last downloaded path if exists
+        val updatesDir = java.io.File(getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS) ?: filesDir, "updates")
+        if (updatesDir.exists()) {
+            val files = updatesDir.listFiles()?.filter { it.name.endsWith(".apk") }?.sortedByDescending { it.lastModified() }
+            if (!files.isNullOrEmpty()) {
+                val f = files.first()
+                binding.tvUpdateDownloadPath.visibility = View.VISIBLE
+                binding.tvUpdateDownloadPath.text = "Last download:\n${f.absolutePath}\n(${GitHubUpdater.formatSize(f.length())}) — delete manually to free memory"
+                binding.tvUpdateDownloadPath.setOnClickListener {
+                    val cm = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                    cm.setPrimaryClip(android.content.ClipData.newPlainText("path", f.absolutePath))
+                    Toast.makeText(this, "Path copied", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun checkForUpdate() {
+        binding.btnCheckUpdate.isEnabled = false
+        binding.btnCheckUpdate.text = "CHECKING..."
+        binding.tvUpdateStatus.text = "Checking..."
+        lifecycleScope.launch {
+            when (val res = GitHubUpdater.checkForUpdate(this@SettingsActivity)) {
+                is GitHubUpdater.UpdateResult.UpdateAvailable -> {
+                    binding.btnCheckUpdate.isEnabled = true
+                    binding.btnCheckUpdate.text = "VIEW UPDATE"
+                    binding.tvUpdateStatus.text = "Update ${res.release.tagName} available!"
+                    binding.tvUpdateStatus.setTextColor(Color.parseColor("#2E7D32"))
+                    // Rewire button to open dialog
+                    binding.btnCheckUpdate.setOnClickListener {
+                        UpdateDialog.show(this@SettingsActivity, res.release, res.asset, settingsManager.darkMode)
+                    }
+                    // Auto show dialog
+                    UpdateDialog.show(this@SettingsActivity, res.release, res.asset, settingsManager.darkMode)
+                }
+                is GitHubUpdater.UpdateResult.NoUpdate -> {
+                    binding.btnCheckUpdate.isEnabled = true
+                    binding.btnCheckUpdate.text = "CHECK AGAIN"
+                    binding.tvUpdateStatus.text = "You are up to date ✓"
+                    binding.tvUpdateStatus.setTextColor(Color.parseColor("#2E7D32"))
+                    binding.btnCheckUpdate.setOnClickListener { checkForUpdate() }
+                    Toast.makeText(this@SettingsActivity, "Already on latest version", Toast.LENGTH_SHORT).show()
+                }
+                is GitHubUpdater.UpdateResult.Error -> {
+                    binding.btnCheckUpdate.isEnabled = true
+                    binding.btnCheckUpdate.text = "RETRY"
+                    binding.tvUpdateStatus.text = "Error: ${res.message.take(40)}"
+                    binding.tvUpdateStatus.setTextColor(Color.parseColor("#C62828"))
+                    binding.btnCheckUpdate.setOnClickListener { checkForUpdate() }
+                    Toast.makeText(this@SettingsActivity, "Update check failed: ${res.message}", Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 

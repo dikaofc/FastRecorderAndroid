@@ -106,11 +106,16 @@ jobs:
           # Create/update release branch — 2 APKs langsung di root release (bukan di folder)
           git checkout -B release
 
+          # Restore workflow file to avoid 'workflows' permission error on push
+          git checkout origin/main -- .github/workflows/android-ci.yml 2>/dev/null || git checkout HEAD -- .github/workflows/android-ci.yml 2>/dev/null || true
+          # Also ensure we don't have modified gradle wrapper files dirty
+          git checkout HEAD -- gradle/wrapper/gradle-wrapper.properties gradlew 2>/dev/null || true
+
           # Copy built APKs langsung ke root release branch
           cp app/build/outputs/apk/debug/*.apk ./ 2>/dev/null || echo "No debug APK"
           cp app/build/outputs/apk/release/*.apk ./ 2>/dev/null || echo "No release APK"
           # Bersihin folder apks lama biar gak dobel
-          rm -rf apks 2>/dev/null || true
+          git rm -rf apks 2>/dev/null || rm -rf apks 2>/dev/null || true
 
           # Generate simple index README di root
           cat > README.md << EOF2
@@ -129,6 +134,8 @@ jobs:
 
           # .gitignore ignores *.apk, so force add 2 APKs di root
           git add -f *.apk README.md
+          # also remove apks/ from index if it existed
+          git rm -r --cached apks 2>/dev/null || true
 
           # Only commit if changed
           if git diff --cached --quiet; then
@@ -145,8 +152,8 @@ jobs:
         if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('auto-{0}', github.sha) }}
-          name: ${{ startsWith(github.ref, 'refs/tags/v') && format('FastRecorder {0}', github.ref_name) || format('FastRecorder auto {0}', github.sha) }}
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v1.0.{0}', github.run_number) }}
+          name: ${{ startsWith(github.ref, 'refs/tags/v') && format('FastRecorder {0}', github.ref_name) || format('FastRecorder v1.0.{0}', github.run_number) }}
           files: |
             app/build/outputs/apk/release/*.apk
             app/build/outputs/apk/debug/*.apk
@@ -154,9 +161,9 @@ jobs:
           draft: false
           prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
           body: |
-            ## FastRecorder ${{ github.ref_name }}
+            ## FastRecorder ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v1.0.{0}', github.run_number) }}
 
-            Auto-built from `${{ github.sha }}` — run `${{ github.run_id }}`
+            Auto-built from `${{ github.sha }}` — run `${{ github.run_id }}` — `v1.0.${{ github.run_number }}`
 
             ### What's Changed
             - Security system with defense-in-depth architecture

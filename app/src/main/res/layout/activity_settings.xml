@@ -591,6 +591,7 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_marginBottom="6dp">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -598,6 +599,7 @@
                         android:text="Security &amp; Integrity"
                         android:textStyle="bold"
                         android:textColor="@color/neo_black"/>
+
                     <TextView
                         android:id="@+id/tvSecurityStatus"
                         android:layout_width="wrap_content"
@@ -620,6 +622,76 @@
                     android:background="@drawable/bg_neo_button_danger"/>
             </LinearLayout>
 
-        </LinearLayout>
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#E0E0E0"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- App Update — auto fetch from GitHub releases -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="6dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="App Update"
+                        android:textStyle="bold"
+                        android:textColor="@color/neo_black"/>
+
+                    <TextView
+                        android:id="@+id/tvUpdateStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tap check"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="#666666"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvCurrentVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Current: v1.0 — checking..."
+                    android:textSize="11sp"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="6dp"/>
+
+                <TextView
+                    android:id="@+id/btnCheckUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:text="CHECK FOR UPDATE"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_white"
+                    android:background="@drawable/bg_neo_toggle_on"/>
+
+                <TextView
+                    android:id="@+id/tvUpdateDownloadPath"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="10sp"
+                    android:textColor="#666666"
+                    android:visibility="gone"
+                    android:layout_marginTop="6dp"/>
+            </LinearLayout>
+
     </ScrollView>
 </LinearLayout>

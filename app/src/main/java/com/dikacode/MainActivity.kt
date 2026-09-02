@@ -104,6 +104,9 @@ class MainActivity : AppCompatActivity() {
             showDeveloperInfoDialog()
             settingsManager.hasShownDeveloperInfo = true
         }
+
+        // Auto check for update (silent, once per launch, 3s delay)
+        checkUpdateSilently()
     }
 
     private fun initSecurity() {
@@ -146,6 +149,26 @@ class MainActivity : AppCompatActivity() {
                     android.util.Log.e("Security", "Security init failed", e)
                 }
             }
+        }
+    }
+
+    private fun checkUpdateSilently() {
+        lifecycleScope.launch {
+            kotlinx.coroutines.delay(3000)
+            try {
+                // Only check if not checked in last 6 hours (avoid spam)
+                val prefs = getSharedPreferences("updater", Context.MODE_PRIVATE)
+                val lastCheck = prefs.getLong("last_check", 0L)
+                if (System.currentTimeMillis() - lastCheck < 6 * 60 * 60 * 1000L) return@launch
+                prefs.edit().putLong("last_check", System.currentTimeMillis()).apply()
+
+                val res = com.dikacode.update.GitHubUpdater.checkForUpdate(this@MainActivity)
+                if (res is com.dikacode.update.GitHubUpdater.UpdateResult.UpdateAvailable) {
+                    // Show non-intrusive update prompt
+                    com.dikacode.update.UpdateDialog.show(this@MainActivity, res.release, res.asset, settingsManager.darkMode)
+                    Toast.makeText(this@MainActivity, "Update ${res.release.tagName} available!", Toast.LENGTH_LONG).show()
+                }
+            } catch (_: Exception) {}
         }
     }
 
