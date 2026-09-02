@@ -1,140 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/dialogDevRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/bg_neo_card"
-    android:padding="20dp"
-    android:layout_margin="16dp">
+    android:fillViewport="false"
+    android:scrollbars="vertical"
+    android:fadeScrollbars="false"
+    android:clipToPadding="false">
 
-    <!-- Header with Developer/App Info + X close -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
-
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_info"
-            app:tint="@color/neo_black"
-            android:id="@+id/ivDevIcon"
-            android:layout_marginEnd="10dp"
-            android:contentDescription="Developer Info"/>
-
-        <TextView
-            android:id="@+id/tvDevTitle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="DEVELOPER INFO"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/neo_black"/>
-
-        <TextView
-            android:id="@+id/btnCloseX"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:text="✕"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/neo_black"
-            android:gravity="center"
-            android:background="@drawable/bg_neo_button"/>
-    </LinearLayout>
-
-    <!-- Description / Info Box -->
-    <LinearLayout
-        android:id="@+id/cardDevDetails"
+        android:id="@+id/dialogDevRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/bg_neo_spinner"
-        android:padding="14dp"
-        android:layout_marginBottom="18dp">
+        android:background="@drawable/bg_neo_card"
+        android:padding="20dp">
 
-        <TextView
-            android:id="@+id/tvDevAppName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FAST RECORDER"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/neo_black"
-            android:layout_marginBottom="4dp"/>
-
-        <TextView
-            android:id="@+id/tvDevMessage"
+        <!-- Header with Developer/App Info + X close -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="APK ini dibuat oleh Dika."
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:textColor="@color/neo_black"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:id="@+id/tvDevHandle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Telegram: @dikaacode"
-            android:textSize="12sp"
-            android:textColor="#444444"/>
-    </LinearLayout>
-
-    <!-- Action Buttons: TELEGRAM and CLOSE -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!-- Telegram Action Button -->
-        <LinearLayout
-            android:id="@+id/btnTelegram"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="46dp"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@drawable/bg_neo_toggle_on"
-            android:layout_marginEnd="8dp">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
             <ImageView
-                android:id="@+id/ivTelegramIcon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_telegram"
-                app:tint="@color/neo_white"
-                android:layout_marginEnd="6dp"
-                android:contentDescription="Telegram"/>
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_info"
+                app:tint="@color/neo_black"
+                android:id="@+id/ivDevIcon"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="Developer Info"/>
 
             <TextView
-                android:id="@+id/tvTelegramText"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvDevTitle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="TELEGRAM"
-                android:textSize="13sp"
+                android:text="DEVELOPER INFO"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/neo_white"/>
+                android:textColor="@color/neo_black"/>
+
+            <TextView
+                android:id="@+id/btnCloseX"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:text="✕"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Close"
+                android:background="@drawable/bg_neo_button"/>
         </LinearLayout>
 
-        <!-- Close Button -->
-        <TextView
-            android:id="@+id/btnCloseDevInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="46dp"
-            android:paddingHorizontal="20dp"
-            android:gravity="center"
-            android:text="CLOSE"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:textColor="@color/neo_black"
-            android:background="@drawable/bg_neo_button"/>
-    </LinearLayout>
+        <!-- Description / Info Box -->
+        <LinearLayout
+            android:id="@+id/cardDevDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_neo_spinner"
+            android:padding="14dp"
+            android:layout_marginBottom="18dp">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/tvDevAppName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FAST RECORDER"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/tvDevMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="APK ini dibuat oleh Dika."
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvDevHandle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Telegram: @dikaacode"
+                android:textSize="12sp"
+                android:textColor="#444444"/>
+        </LinearLayout>
+
+        <!-- Action Buttons: TELEGRAM and CLOSE -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/btnTelegram"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="46dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/bg_neo_toggle_on"
+                android:layout_marginEnd="8dp">
+
+                <ImageView
+                    android:id="@+id/ivTelegramIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_telegram"
+                    app:tint="@color/neo_white"
+                    android:layout_marginEnd="6dp"
+                    android:contentDescription="Telegram"/>
+
+                <TextView
+                    android:id="@+id/tvTelegramText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TELEGRAM"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/neo_white"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/btnCloseDevInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:paddingHorizontal="20dp"
+                android:gravity="center"
+                android:text="CLOSE"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/neo_black"
+                android:background="@drawable/bg_neo_button"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
