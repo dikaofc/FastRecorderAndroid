@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/bg_neo_card"
-            android:padding="16dp"
+            android:padding="14dp"
             android:paddingBottom="24dp">
 
             <!-- Trust State Banner -->
@@ -66,8 +66,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/bg_neo_spinner"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
+                android:padding="12dp"
+                android:layout_marginBottom="14dp"
                 android:gravity="center">
 
                 <TextView
@@ -75,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TRUST STATE"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textStyle="bold"
                     android:textColor="#666666"
                     android:layout_marginBottom="4dp"/>
@@ -85,22 +85,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="TRUSTED"
-                    android:textSize="24sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/neo_green"
                     android:gravity="center"
-                    android:maxLines="2"
-                    android:ellipsize="end"/>
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
 
                 <TextView
                     android:id="@+id/tvTrustDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="No threats detected"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textColor="#666666"
                     android:gravity="center"
-                    android:maxLines="3"
+                    android:maxLines="2"
                     android:ellipsize="end"
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
@@ -162,11 +163,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="ALLOW"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/neo_black"
                 android:background="@drawable/bg_neo_spinner"
-                android:padding="12dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:layout_marginBottom="14dp"/>
 
             <!-- Confidence -->
@@ -184,11 +188,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="HIGH"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/neo_black"
                 android:background="@drawable/bg_neo_spinner"
-                android:padding="12dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:layout_marginBottom="14dp"/>
 
             <!-- Attribution Status -->
@@ -202,11 +209,13 @@
                 android:layout_marginBottom="6dp"/>
 
             <LinearLayout
+                android:id="@+id/attributionRow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:background="@drawable/bg_neo_spinner"
-                android:padding="12dp"
+                android:padding="10dp"
                 android:layout_marginBottom="14dp">
 
                 <TextView
@@ -215,18 +224,24 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="VERIFIED"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/neo_green"/>
+                    android:textColor="@color/neo_green"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
 
                 <TextView
                     android:id="@+id/tvAttributionAuthor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@dikaacode"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
-                    android:textColor="#666666"/>
+                    android:textColor="#666666"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginStart="8dp"/>
             </LinearLayout>
 
             <!-- Divider -->

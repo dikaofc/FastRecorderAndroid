@@ -150,14 +150,18 @@ class SecurityDiagnosticsActivity : AppCompatActivity() {
 
         val domainName = TextView(this).apply {
             text = domain
-            textSize = 13f
+            textSize = 12f
             setTextColor(textColor)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginEnd = 8 }
         }
 
         val score = TextView(this).apply {
             text = "$contribution pts"
-            textSize = 13f
+            textSize = 12f
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
             setTextColor(
                 when {
                     contribution >= 40 -> ContextCompat.getColor(this@SecurityDiagnosticsActivity, R.color.neo_red)
@@ -180,14 +184,22 @@ class SecurityDiagnosticsActivity : AppCompatActivity() {
 
         val domainLabel = TextView(this).apply {
             text = "[$domain]"
-            textSize = 11f
+            textSize = 10f
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
             setTextColor(subtextColor)
         }
 
         val signalDetail = TextView(this).apply {
             text = detail
-            textSize = 12f
+            textSize = 11f
+            maxLines = 3
+            ellipsize = android.text.TextUtils.TruncateAt.END
             setTextColor(textColor)
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                breakStrategy = android.widget.TextView.BREAK_STRATEGY_SIMPLE
+                hyphenationFrequency = android.widget.TextView.HYPHENATION_FREQUENCY_NONE
+            }
         }
 
         row.addView(domainLabel)
@@ -203,14 +215,22 @@ class SecurityDiagnosticsActivity : AppCompatActivity() {
 
         val clusterLabel = TextView(this).apply {
             text = "[$clusterId] — $signalCount signals"
-            textSize = 11f
+            textSize = 10f
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
             setTextColor(subtextColor)
         }
 
         val cause = TextView(this).apply {
             text = rootCause
-            textSize = 12f
+            textSize = 11f
+            maxLines = 3
+            ellipsize = android.text.TextUtils.TruncateAt.END
             setTextColor(textColor)
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                breakStrategy = android.widget.TextView.BREAK_STRATEGY_SIMPLE
+                hyphenationFrequency = android.widget.TextView.HYPHENATION_FREQUENCY_NONE
+            }
         }
 
         row.addView(clusterLabel)
@@ -259,7 +279,7 @@ class SecurityDiagnosticsActivity : AppCompatActivity() {
             binding.lblConfidence.setTextColor(Color.parseColor("#FFFFFF"))
             binding.tvAttributionState.setTextColor(Color.parseColor("#00E676"))
             binding.tvAttributionAuthor.setTextColor(Color.parseColor("#AAAAAA"))
-            binding.tvAttributionState.setBackgroundResource(R.drawable.bg_neo_spinner_dark)
+            binding.attributionRow.setBackgroundResource(R.drawable.bg_neo_spinner_dark)
             binding.lblAttribution.setTextColor(Color.parseColor("#FFFFFF"))
             binding.lblDomains.setTextColor(Color.parseColor("#FFFFFF"))
             binding.lblSignals.setTextColor(Color.parseColor("#FFFFFF"))
@@ -288,7 +308,7 @@ class SecurityDiagnosticsActivity : AppCompatActivity() {
             binding.lblConfidence.setTextColor(Color.parseColor("#0A0A0A"))
             binding.tvAttributionState.setTextColor(Color.parseColor("#00E676"))
             binding.tvAttributionAuthor.setTextColor(Color.parseColor("#666666"))
-            binding.tvAttributionState.setBackgroundResource(R.drawable.bg_neo_spinner)
+            binding.attributionRow.setBackgroundResource(R.drawable.bg_neo_spinner)
             binding.lblAttribution.setTextColor(Color.parseColor("#0A0A0A"))
             binding.lblDomains.setTextColor(Color.parseColor("#0A0A0A"))
             binding.lblSignals.setTextColor(Color.parseColor("#0A0A0A"))
