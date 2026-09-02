@@ -692,6 +692,6 @@
                     android:visibility="gone"
                     android:layout_marginTop="6dp"/>
             </LinearLayout>
-
+        </LinearLayout>
     </ScrollView>
 </LinearLayout>

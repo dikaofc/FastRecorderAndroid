@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -54,6 +55,14 @@ object UpdateDialog {
         val btnDownload = dialogView.findViewById<TextView>(activity.resources.getIdentifier("btnDownload", "id", activity.packageName))
         val btnInstall = dialogView.findViewById<TextView>(activity.resources.getIdentifier("btnInstall", "id", activity.packageName))
         val btnOpenFolder = dialogView.findViewById<TextView>(activity.resources.getIdentifier("btnOpenFolder", "id", activity.packageName))
+        val cbDelete = dialogView.findViewById<CheckBox>(activity.resources.getIdentifier("cbDeleteAfterInstall", "id", activity.packageName))
+
+        // Restore preference for delete checkbox
+        val prefs = activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
+        cbDelete.isChecked = prefs.getBoolean("delete_after_install", true)
+        cbDelete.setOnCheckedChangeListener { _, checked ->
+            prefs.edit().putBoolean("delete_after_install", checked).apply()
+        }
 
         val currentVer = GitHubUpdater.getCurrentVersionName(activity)
         tvVersion.text = "$currentVer → ${release.tagName}  (${if (release.prerelease) "prerelease" else "stable"})"
@@ -145,8 +154,17 @@ object UpdateDialog {
                 Toast.makeText(activity, "File not found, please download again", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            val canInstall = activity.packageManager.canRequestPackageInstalls().let {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) it else true
+            val shouldDelete = cbDelete.isChecked
+            // Persist choice for next time
+            activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
+                .edit().putBoolean("delete_after_install", shouldDelete).apply()
+            if (shouldDelete) {
+                // Mark file to be deleted after install - cleanup on next launch via MainActivity
+                activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
+                    .edit().putString("pending_delete_apk", file.absolutePath).apply()
+            } else {
+                activity.getSharedPreferences("updater", Context.MODE_PRIVATE)
+                    .edit().remove("pending_delete_apk").apply()
             }
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O && !activity.packageManager.canRequestPackageInstalls()) {
                 Toast.makeText(activity, "Please allow 'Install unknown apps' for FastRecorder in Settings", Toast.LENGTH_LONG).show()
@@ -162,7 +180,10 @@ object UpdateDialog {
             }
             val ok = GitHubUpdater.installApk(activity, file)
             if (!ok) Toast.makeText(activity, "Could not launch installer", Toast.LENGTH_SHORT).show()
-            else dialog.dismiss()
+            else {
+                if (shouldDelete) Toast.makeText(activity, "APK will be deleted after install", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
         }
 
         dialog.show()

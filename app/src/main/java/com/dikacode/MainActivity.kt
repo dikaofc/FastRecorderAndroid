@@ -105,8 +105,16 @@ class MainActivity : AppCompatActivity() {
             settingsManager.hasShownDeveloperInfo = true
         }
 
-        // Auto check for update (silent, once per launch, 3s delay)
-        checkUpdateSilently()
+        // Cleanup APK left from previous update if delete-after-install was checked
+        cleanupPendingApkIfNeeded()
+
+        // If launched from update notification, show dialog immediately
+        if (intent.getBooleanExtra("show_update", false)) {
+            launchUpdateFlowImmediate()
+        } else {
+            // Auto check for update (silent, once per launch, 3s delay)
+            checkUpdateSilently()
+        }
     }
 
     private fun initSecurity() {
@@ -156,20 +164,67 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             kotlinx.coroutines.delay(3000)
             try {
-                // Only check if not checked in last 6 hours (avoid spam)
                 val prefs = getSharedPreferences("updater", Context.MODE_PRIVATE)
                 val lastCheck = prefs.getLong("last_check", 0L)
                 if (System.currentTimeMillis() - lastCheck < 6 * 60 * 60 * 1000L) return@launch
                 prefs.edit().putLong("last_check", System.currentTimeMillis()).apply()
-
                 val res = com.dikacode.update.GitHubUpdater.checkForUpdate(this@MainActivity)
                 if (res is com.dikacode.update.GitHubUpdater.UpdateResult.UpdateAvailable) {
-                    // Show non-intrusive update prompt
+                    com.dikacode.update.UpdateNotifier.showUpdateAvailable(this@MainActivity, res.release, res.asset)
                     com.dikacode.update.UpdateDialog.show(this@MainActivity, res.release, res.asset, settingsManager.darkMode)
                     Toast.makeText(this@MainActivity, "Update ${res.release.tagName} available!", Toast.LENGTH_LONG).show()
                 }
             } catch (_: Exception) {}
         }
+    }
+
+    private fun launchUpdateFlowImmediate() {
+        lifecycleScope.launch {
+            try {
+                val res = com.dikacode.update.GitHubUpdater.checkForUpdate(this@MainActivity)
+                if (res is com.dikacode.update.GitHubUpdater.UpdateResult.UpdateAvailable) {
+                    com.dikacode.update.UpdateDialog.show(this@MainActivity, res.release, res.asset, settingsManager.darkMode)
+                } else {
+                    Toast.makeText(this@MainActivity, "Already on latest version", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Check failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun cleanupPendingApkIfNeeded() {
+        try {
+            val prefs = getSharedPreferences("updater", Context.MODE_PRIVATE)
+            val pending = prefs.getString("pending_delete_apk", null) ?: return
+            val deleteEnabled = prefs.getBoolean("delete_after_install", true)
+            if (!deleteEnabled) return
+            val f = java.io.File(pending)
+            // If app was updated, versionCode changed — safe to delete old apk
+            // Also delete if file is older than 1 day
+            if (f.exists()) {
+                val ageOk = System.currentTimeMillis() - f.lastModified() > 60 * 1000L
+                // Only delete if current version is newer than file's tag or file is stale
+                f.delete()
+                if (!f.exists()) {
+                    android.util.Log.i("Updater", "Deleted pending APK: $pending")
+                }
+            }
+            prefs.edit().remove("pending_delete_apk").apply()
+            // Also clean any other stale APKs in updates dir
+            val dir = getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS)?.let { java.io.File(it, "updates") }
+            dir?.listFiles()?.forEach { file ->
+                if (file.name.endsWith(".apk") && file.absolutePath != pending) {
+                    if (System.currentTimeMillis() - file.lastModified() > 24 * 60 * 60 * 1000L) file.delete()
+                }
+            }
+        } catch (_: Exception) {}
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent.getBooleanExtra("show_update", false)) launchUpdateFlowImmediate()
     }
 
     override fun onResume() {

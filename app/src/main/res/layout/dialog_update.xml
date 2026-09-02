@@ -159,6 +159,16 @@
 
     </LinearLayout>
 
+    <CheckBox
+        android:id="@+id/cbDeleteAfterInstall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete APK after update (save storage)"
+        android:textSize="12sp"
+        android:textColor="#333333"
+        android:layout_marginTop="10dp"
+        android:checked="true" />
+
     <TextView
         android:id="@+id/btnOpenFolder"
         android:layout_width="match_parent"

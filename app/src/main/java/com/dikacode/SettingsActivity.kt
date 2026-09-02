@@ -1,5 +1,8 @@
 package com.dikacode
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -293,8 +296,8 @@ class SettingsActivity : AppCompatActivity() {
                 binding.tvUpdateDownloadPath.visibility = View.VISIBLE
                 binding.tvUpdateDownloadPath.text = "Last download:\n${f.absolutePath}\n(${GitHubUpdater.formatSize(f.length())}) — delete manually to free memory"
                 binding.tvUpdateDownloadPath.setOnClickListener {
-                    val cm = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-                    cm.setPrimaryClip(android.content.ClipData.newPlainText("path", f.absolutePath))
+                    val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    cm.setPrimaryClip(ClipData.newPlainText("path", f.absolutePath))
                     Toast.makeText(this, "Path copied", Toast.LENGTH_SHORT).show()
                 }
             }
